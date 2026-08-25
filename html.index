@@ -1,0 +1,1293 @@
+<!Doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Totot Kitfo & Adulis Luxury - Artistic Portfolio & Admin</title>
+    <meta name="description" content="Artistic Flair dining management and culinary portfolio for Totot Kitfo." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600;1,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
+    <!-- React & Babel CDKs for single-file runtime -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --paper-bg: #FDFCF5;
+        --paper-card: #FFFFFF;
+        --paper-muted: #F5F3EB;
+        --paper-secondary: #EFECE5;
+        --charcoal: #1A1A1A;
+        --charcoal-light: #2A2A2A;
+        --text-muted: rgba(26, 26, 26, 0.6);
+        --text-subtle: rgba(26, 26, 26, 0.4);
+        --border-artistic: rgba(26, 26, 26, 0.1);
+        --border-artistic-strong: rgba(26, 26, 26, 0.2);
+        --primary: #1A1A1A;
+        --primary-container: #EFECE5;
+        --on-surface: #1A1A1A;
+        --on-surface-variant: rgba(26, 26, 26, 0.7);
+      }
+
+      body {
+        background-color: #FDFCF5;
+        color: #1A1A1A;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      h1, h2, h3, h4, .font-serif-title, .font-serif {
+        font-family: 'Playfair Display', 'Source Serif 4', Georgia, serif;
+      }
+
+      .font-sans {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      .bento-card {
+        background-color: #FFFFFF;
+        border: 1px solid rgba(26, 26, 26, 0.1);
+        border-radius: 0.5rem;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 1px 3px rgba(26, 26, 26, 0.03);
+      }
+
+      .bento-card:hover {
+        border-color: rgba(26, 26, 26, 0.25);
+        box-shadow: 0 10px 30px -10px rgba(26, 26, 26, 0.08);
+      }
+
+      .bento-input {
+        background-color: #FFFFFF;
+        border: 1px solid rgba(26, 26, 26, 0.15);
+        color: #1A1A1A;
+        transition: all 0.2s ease;
+      }
+
+      .bento-input:focus {
+        border-color: #1A1A1A;
+        outline: none;
+        box-shadow: 0 0 0 1px #1A1A1A;
+      }
+
+      .table-row-divider {
+        border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+      }
+
+      .table-row-divider:last-child {
+        border-bottom: none;
+      }
+
+      /* Custom Scrollbars */
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: rgba(26, 26, 26, 0.15);
+        border-radius: 9999px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(26, 26, 26, 0.35);
+      }
+
+      /* Material Symbols alignment */
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+      }
+      .material-symbols-outlined.fill-1 {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+
+      /* Artistic Flair specific helper classes */
+      .artistic-stamp {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: rgba(26, 26, 26, 0.45);
+      }
+
+      .artistic-badge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 9999px;
+        border: 1px solid rgba(26, 26, 26, 0.15);
+        background-color: #EFECE5;
+        color: #1A1A1A;
+      }
+    </style>
+  </head>
+  <body class="bg-[#FDFCF5] text-[#1A1A1A] antialiased selection:bg-[#1A1A1A] selection:text-[#FDFCF5]">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect, useRef } = React;
+
+      // Mock Lucide Icons using Material Symbols for direct inline reliability
+      const Icon = ({ name, className = "w-4 h-4" }) => (
+        <span className={`material-symbols-outlined ${className}`} style={{ fontSize: 'inherit' }}>
+          {name}
+        </span>
+      );
+
+      // Data Initial State[cite: 4]
+      const INITIAL_MENU_ITEMS = [
+        {
+          id: 'menu-1',
+          name: 'Totot Special Kitfo',
+          description: 'Premium minced beef, seasoned clarified butter (niter kibbeh), mitmita, served with ayib and gomen.',
+          price: 1250.00,
+          category: 'specialties',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBvv2p3Y0bwHcgqLT29PHl6660A-ekamYuu2BhMraCWfRn0gk84eRluhNCgT_ZE0Vxt8jBk0BRjzhrxD4bUI7rZoEhEcOOAAEbZau7yOFoNuVQP5A0BjMCKiFaNqcFyKk6qGoVrPAww_T-BUn95kQg963bqsW4r_XnB7Zek2EpHKpnBz7h49CbGR2r4kmWmfxJAZVVU0rzM_T9xr2bYR5cwt15eJt095jhP4vlL3pfsmdlytix0Lt1bUw',
+          available: true,
+          isFeatured: true,
+          prepTimeMinutes: 15
+        },
+        {
+          id: 'menu-2',
+          name: 'Gomen Kitfo',
+          description: 'Minced collard greens with aromatic spices, garlic, and seasoned herbal butter.',
+          price: 650.00,
+          category: 'specialties',
+          image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/Gomen_besiga.jpg',
+          available: false,
+          isFeatured: false,
+          prepTimeMinutes: 12
+        },
+        {
+          id: 'menu-3',
+          name: 'Kitfo Leb (Rare)',
+          description: 'Finely minced prime beef warmed gently in rich niter kibbeh and Gurage mitmita, served rare.',
+          price: 980.00,
+          category: 'specialties',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAP0SA8WxJYmTktZ4RImC9_gav0izlwyP8RPxHnYudZY8WkQpiKiY65Ms8O_ATNDi7pjlXDmCoUtK52_-peuuxMQO6BARQ54TsDvULUFrQqreiXdwE6O8x5i-hYM8v-siKuXE7ofKvV7SAxSv8meHXfn6Um17pMTMZ2ZqHMZhP0yKvgXDO35mWpn_QzJwECwMRyYl6VFuedGGB70dtt8guAbMBWQ5eBJZ53ZdUXxYbKkIOcmMw8ZXHzaA',
+          available: true,
+          isFeatured: true,
+          prepTimeMinutes: 10
+        },
+        {
+          id: 'menu-4',
+          name: 'Gored Gored',
+          description: 'Cubed tender beef tossed in spiced clarified butter, mitmita, and awaze paste.',
+          price: 890.00,
+          category: 'specialties',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBvv2p3Y0bwHcgqLT29PHl6660A-ekamYuu2BhMraCWfRn0gk84eRluhNCgT_ZE0Vxt8jBk0BRjzhrxD4bUI7rZoEhEcOOAAEbZau7yOFoNuVQP5A0BjMCKiFaNqcFyKk6qGoVrPAww_T-BUn95kQg963bqsW4r_XnB7Zek2EpHKpnBz7h49CbGR2r4kmWmfxJAZVVU0rzM_T9xr2bYR5cwt15eJt095jhP4vlL3pfsmdlytix0Lt1bUw',
+          available: true,
+          isFeatured: false,
+          prepTimeMinutes: 15
+        },
+        {
+          id: 'menu-5',
+          name: 'Dulet Special',
+          description: 'Minced tripe, liver, lean beef sautéed with diced onions, jalapeños, and cardamom.',
+          price: 750.00,
+          category: 'specialties',
+          image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg',
+          available: true,
+          isFeatured: false,
+          prepTimeMinutes: 18
+        },
+        {
+          id: 'menu-6',
+          name: 'Ayib Cottage Cheese',
+          description: 'Fresh homemade Ethiopian cottage cheese, mild and creamy, balances spiced dishes.',
+          price: 220.00,
+          category: 'sides',
+          image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/Gomen_besiga.jpg',
+          available: true,
+          isFeatured: false,
+          prepTimeMinutes: 5
+        },
+        {
+          id: 'menu-7',
+          name: 'Gomen Besiga (Slow Braised)',
+          description: 'Tender beef and slow-cooked collard greens in spiced butter broth, served on banana leaves.',
+          price: 480.00,
+          category: 'sides',
+          image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/Gomen_besiga.jpg',
+          available: true,
+          isFeatured: true,
+          prepTimeMinutes: 10
+        },
+        {
+          id: 'menu-8',
+          name: 'Injera Basket (Pure Teff)',
+          description: 'Traditional fermented spongy flatbread made with 100% Ethiopian brown and white teff.',
+          price: 150.00,
+          category: 'sides',
+          image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg',
+          available: true,
+          isFeatured: false,
+          prepTimeMinutes: 5
+        },
+        {
+          id: 'menu-9',
+          name: 'Timatim & Jalapeño Salad',
+          description: 'Diced vine-ripened tomatoes, red onions, and fiery green chilies in lemon-olive dressing.',
+          price: 180.00,
+          category: 'sides',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBvv2p3Y0bwHcgqLT29PHl6660A-ekamYuu2BhMraCWfRn0gk84eRluhNCgT_ZE0Vxt8jBk0BRjzhrxD4bUI7rZoEhEcOOAAEbZau7yOFoNuVQP5A0BjMCKiFaNqcFyKk6qGoVrPAww_T-BUn95kQg963bqsW4r_XnB7Zek2EpHKpnBz7h49CbGR2r4kmWmfxJAZVVU0rzM_T9xr2bYR5cwt15eJt095jhP4vlL3pfsmdlytix0Lt1bUw',
+          available: true,
+          isFeatured: false,
+          prepTimeMinutes: 8
+        },
+        {
+          id: 'menu-10',
+          name: 'Royal Coffee Ceremony',
+          description: 'Fresh green coffee beans roasted on embers, ground tableside, and brewed in a clay jebena.',
+          price: 350.00,
+          category: 'drinks',
+          image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg',
+          available: true,
+          isFeatured: true,
+          prepTimeMinutes: 20
+        },
+        {
+          id: 'menu-11',
+          name: 'Honey Tej Wine (House Reserve)',
+          description: 'Traditional Ethiopian fermented honey mead, infused with gesho leaves in a vintage berele.',
+          price: 280.00,
+          category: 'drinks',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAP0SA8WxJYmTktZ4RImC9_gav0izlwyP8RPxHnYudZY8WkQpiKiY65Ms8O_ATNDi7pjlXDmCoUtK52_-peuuxMQO6BARQ54TsDvULUFrQqreiXdwE6O8x5i-hYM8v-siKuXE7ofKvV7SAxSv8meHXfn6Um17pMTMZ2ZqHMZhP0yKvgXDO35mWpn_QzJwECwMRyYl6VFuedGGB70dtt8guAbMBWQ5eBJZ53ZdUXxYbKkIOcmMw8ZXHzaA',
+          available: true,
+          isFeatured: false,
+          prepTimeMinutes: 5
+        },
+        {
+          id: 'menu-12',
+          name: 'Ambo Sparkling Mineral Water',
+          description: 'Naturally carbonated volcanic mineral water bottled at source in Ambo, Ethiopia.',
+          price: 90.00,
+          category: 'drinks',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwawvBMqLpjDJK9EEQdH-Fq0U3YTEVdGHc9dKlyYbmzFdxJFsCpgn-vjGRI56Y1V0qAqEcO3oIUv9gjzPHaYs-aXa3OHZA_9MeaRMCYzrr-n2f9BFLg2D2ZenpcUDPxT6GdN0r8TrcrkzmLqM0dp1qkc5E66AOLIumpRQ_aAR3c-Y9HDPyWU5Dw_XwfgWbPLh3g41xuC3CKsTbBBV2Sgc5FmmqcDL1Z9s7IXIwInp84JqeA3wD8ZcYbw',
+          available: true,
+          isFeatured: false,
+          prepTimeMinutes: 2
+        }
+      ];
+
+      const INITIAL_RESERVATIONS = [
+        {
+          id: 'res-1',
+          customerName: 'Elias Makonnen',
+          contactPhone: '+251 91 123 4567',
+          partySize: 4,
+          date: '2026-08-25',
+          time: '19:30',
+          status: 'Pending',
+          isVIP: true,
+          specialRequests: 'Traditional mesob seating with extra ayib and kocho.',
+          createdAt: '2026-08-25 10:15'
+        },
+        {
+          id: 'res-2',
+          customerName: 'Sara Bekele',
+          contactPhone: '+251 92 887 6543',
+          partySize: 2,
+          date: '2026-08-25',
+          time: '20:00',
+          status: 'Confirmed',
+          isVIP: false,
+          specialRequests: 'Anniversary dinner table by the window garden.',
+          createdAt: '2026-08-25 11:20'
+        },
+        {
+          id: 'res-3',
+          customerName: 'Dawit Tadesse',
+          contactPhone: '+251 91 445 6789',
+          partySize: 8,
+          date: '2026-08-26',
+          time: '18:00',
+          status: 'Confirmed',
+          isVIP: true,
+          specialRequests: 'Full Jebena coffee ceremony setup after kitfo course.',
+          createdAt: '2026-08-24 16:45'
+        },
+        {
+          id: 'res-4',
+          customerName: 'Eleanor Vance',
+          contactPhone: '+1 (555) 019-2834',
+          partySize: 2,
+          date: '2026-08-27',
+          time: '19:30',
+          status: 'Pending',
+          isVIP: true,
+          specialRequests: 'VIP Lounge reservation, mild mitmita preference.',
+          createdAt: '2026-08-25 09:00'
+        },
+        {
+          id: 'res-5',
+          customerName: 'Marcus Sterling',
+          contactPhone: '+1 (555) 847-1029',
+          partySize: 4,
+          date: '2026-08-27',
+          time: '20:00',
+          status: 'Confirmed',
+          isVIP: false,
+          specialRequests: 'Tasting menu with Tej honey wine pairing.',
+          createdAt: '2026-08-24 14:10'
+        },
+        {
+          id: 'res-6',
+          customerName: 'Sophia Laurent',
+          contactPhone: '+44 20 7946 0958',
+          partySize: 6,
+          date: '2026-08-28',
+          time: '18:15',
+          status: 'Cancelled',
+          isVIP: false,
+          specialRequests: 'International delegation dinner - postponed.',
+          createdAt: '2026-08-23 18:30'
+        },
+        {
+          id: 'res-7',
+          customerName: 'David Chen',
+          contactPhone: '+1 (555) 392-8174',
+          partySize: 12,
+          date: '2026-08-24',
+          time: '12:30',
+          status: 'Completed',
+          isVIP: false,
+          isCorporate: true,
+          specialRequests: 'Executive banquet room with multimedia display.',
+          createdAt: '2026-08-22 08:40'
+        },
+        {
+          id: 'res-8',
+          customerName: 'Bethlehem Haile',
+          contactPhone: '+251 93 551 2299',
+          partySize: 5,
+          date: '2026-08-26',
+          time: '20:30',
+          status: 'Confirmed',
+          isVIP: true,
+          specialRequests: 'Gurage cultural heritage celebration table.',
+          createdAt: '2026-08-25 08:30'
+        }
+      ];
+
+      const INITIAL_SITE_SETTINGS = {
+        address: '128 Elite Avenue, Central District, AD 90210 / Gerji, Bole Sub-City, Addis Ababa',
+        phone: '+1 (555) 019-8234 / +251 11 646 0718',
+        hoursType: '24hours',
+        openTime: '00:00',
+        closeTime: '23:59',
+        brandName: 'Adulis Luxury & Totot Kitfo',
+        tagline: 'Crafted Tradition. Pure Flavor.',
+        cityCountry: 'Addis Ababa, Ethiopia',
+        description: 'Totot Kitfo brings the authentic Gurage art of kitfo to Gerji - finely minced beef, warmed gently in niter kibbeh and mitmita, served the way it has been for generations.',
+        announcement: 'Special Kitfo Reserve available every evening from 6:00 PM.'
+      };
+
+      // --- Sidebar Component ---[cite: 4]
+      const Sidebar = ({ currentTab, onSelectTab, onOpenNewReservation, pendingReservationsCount, mobileOpen, onCloseMobile }) => {
+        const navItems = [
+          { id: 'dashboard', label: 'Dashboard', materialIcon: 'dashboard' },
+          { id: 'menu', label: 'Menu CMS', materialIcon: 'restaurant_menu' },
+          { id: 'reservations', label: 'Reservations', materialIcon: 'event_available', badge: pendingReservationsCount > 0 ? pendingReservationsCount : undefined },
+          { id: 'bento_media', label: 'Bento & Media', materialIcon: 'grid_view' },
+          { id: 'analytics', label: 'Analytics', materialIcon: 'monitoring' },
+          { id: 'reports', label: 'Reports & Logs', materialIcon: 'receipt_long' },
+          { id: 'settings', label: 'Settings', materialIcon: 'settings' }
+        ];
+
+        return (
+          <React.Fragment>
+            {mobileOpen && (
+              <div 
+                className="fixed inset-0 bg-[#1A1A1A]/40 z-40 md:hidden backdrop-blur-xs"
+                onClick={onCloseMobile}
+              />
+            )}
+            <aside className={`
+              bg-[#F7F5EE] h-screen w-64 lg:w-72 shrink-0 border-r border-[#1A1A1A]/10 
+              flex flex-col py-6 px-5 z-40 transition-transform duration-300 ease-in-out select-none fixed md:relative
+              ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+            `}>
+              <div className="mb-8 flex items-center justify-between">
+                <div className="flex items-center gap-3.5 cursor-pointer" onClick={() => onSelectTab('dashboard')}>
+                  <div className="w-10 h-10 rounded-full bg-[#EFECE5] overflow-hidden border border-[#1A1A1A]/20 shrink-0 flex items-center justify-center shadow-xs">
+                    <img 
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwawvBMqLpjDJK9EEQdH-Fq0U3YTEVdGHc9dKlyYbmzFdxJFsCpgn-vjGRI56Y1V0qAqEcO3oIUv9gjzPHaYs-aXa3OHZA_9MeaRMCYzrr-n2f9BFLg2D2ZenpcUDPxT6GdN0r8TrcrkzmLqM0dp1qkc5E66AOLIumpRQ_aAR3c-Y9HDPyWU5Dw_XwfgWbPLh3g41xuC3CKsTbBBV2Sgc5FmmqcDL1Z9s7IXIwInp84JqeA3wD8ZcYbw" 
+                      alt="Adulis Luxury Emblem" 
+                      className="w-full h-full object-cover grayscale contrast-125"
+                    />
+                  </div>
+                  <div>
+                    <h1 className="font-serif italic text-[21px] font-bold text-[#1A1A1A] tracking-tight leading-none">
+                      Adulis & Totot
+                    </h1>
+                    <p className="text-[9px] font-bold text-[#1A1A1A]/50 mt-1 uppercase tracking-[0.25em] font-sans">
+                      Curated Studio
+                    </p>
+                  </div>
+                </div>
+                {onCloseMobile && (
+                  <button onClick={onCloseMobile} className="md:hidden text-[#1A1A1A]/60 hover:text-[#1A1A1A] p-1">
+                    <Icon name="close" className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+
+              <div className="text-[9px] font-bold tracking-[0.3em] uppercase text-[#1A1A1A]/40 px-3.5 mb-2">
+                Management
+              </div>
+
+              <ul className="flex flex-col gap-1.5 flex-grow overflow-y-auto pr-1">
+                {navItems.map((item) => {
+                  const isActive = currentTab === item.id;
+                  return (
+                    <li key={item.id}>
+                      <button
+                        id={`nav-tab-${item.id}`}
+                        onClick={() => {
+                          onSelectTab(item.id);
+                          if (onCloseMobile) onCloseMobile();
+                        }}
+                        className={`
+                          w-full flex items-center justify-between px-3.5 py-2.5 rounded-md text-left transition-all duration-200 group
+                          ${isActive 
+                            ? 'bg-[#1A1A1A] text-[#FDFCF5] font-medium shadow-xs' 
+                            : 'text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#EFECE5]'}
+                        `}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className={`material-symbols-outlined text-[19px] transition-transform group-hover:scale-105 ${isActive ? 'text-[#FDFCF5]' : 'text-[#1A1A1A]/60'}`}>
+                            {item.materialIcon}
+                          </span>
+                          <span className="text-[13px] tracking-wide font-sans">{item.label}</span>
+                        </div>
+                        {item.badge !== undefined && (
+                          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase border ${
+                            isActive 
+                              ? 'bg-[#FDFCF5]/20 text-[#FDFCF5] border-white/30' 
+                              : 'bg-[#EFECE5] text-[#1A1A1A] border-[#1A1A1A]/15'
+                          }`}>
+                            {item.badge}
+                          </span>
+                        )}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <div className="mt-auto pt-4 flex flex-col gap-2 border-t border-[#1A1A1A]/10">
+                <button
+                  id="nav-consumer-view"
+                  onClick={() => {
+                    onSelectTab('consumer_site');
+                    if (onCloseMobile) onCloseMobile();
+                  }}
+                  className="w-full py-2.5 px-3 bg-[#FFFFFF] border border-[#1A1A1A]/15 hover:border-[#1A1A1A]/50 text-[#1A1A1A] text-[11px] font-bold tracking-[0.15em] uppercase rounded-md transition-all flex items-center justify-center gap-2 group shadow-2xs"
+                >
+                  <Icon name="public" className="w-3.5 h-3.5 text-[#1A1A1A]/70 transition-transform group-hover:rotate-45" />
+                  <span>Public Exhibition</span>
+                </button>
+                <button 
+                  id="btn-sidebar-new-reservation"
+                  onClick={() => {
+                    onOpenNewReservation();
+                    if (onCloseMobile) onCloseMobile();
+                  }}
+                  className="w-full py-2.5 bg-[#1A1A1A] hover:bg-[#333333] text-[#FDFCF5] font-bold text-[11px] tracking-[0.15em] uppercase rounded-md transition-all duration-200 flex items-center justify-center gap-2 shadow-xs active:scale-[0.98]"
+                >
+                  <Icon name="add" className="w-3.5 h-3.5" />
+                  <span>New Reservation</span>
+                </button>
+                <div className="text-center pt-2">
+                  <span className="text-[8px] font-bold tracking-[0.3em] uppercase text-[#1A1A1A]/35">
+                    EST. MMXXIV • ADDIS ABABA
+                  </span>
+                </div>
+              </div>
+            </aside>
+          </React.Fragment>
+        );
+      };
+
+      // --- TopAppBar Component ---[cite: 4]
+      const TopAppBar = ({ currentTab, brandName, onNavigate, onOpenNewReservation, onToggleMobileMenu }) => {
+        const [showSearchInput, setShowSearchInput] = useState(false);
+        const [searchQuery, setSearchQuery] = useState('');
+        const [showNotifications, setShowNotifications] = useState(false);
+        const [showProfileMenu, setShowProfileMenu] = useState(false);
+        const notifRef = useRef(null);
+        const profileRef = useRef(null);
+
+        const [notifications, setNotifications] = useState([
+          { id: 'n1', title: 'New VIP Reservation', desc: 'Elias Makonnen booked for 4 guests (19:30)', time: '10m ago', unread: true, type: 'reservations' },
+          { id: 'n2', title: 'Kitchen Stock Alert', desc: 'Gomen Kitfo requires prep updates', time: '1h ago', unread: true, type: 'menu' },
+          { id: 'n3', title: 'Patron Google Maps Photo', desc: 'New 5-star photo posted for Gerji location', time: '2h ago', unread: false, type: 'bento_media' }
+        ]);
+
+        const unreadCount = notifications.filter(n => n.unread).length;
+        const markAllRead = () => setNotifications(notifications.map(n => ({ ...n, unread: false })));
+
+        useEffect(() => {
+          const handleClickOutside = (e) => {
+            if (notifRef.current && !notifRef.current.contains(e.target)) setShowNotifications(false);
+            if (profileRef.current && !profileRef.current.contains(e.target)) setShowProfileMenu(false);
+          };
+          document.addEventListener('mousedown', handleClickOutside);
+          return () => document.removeEventListener('mousedown', handleClickOutside);
+        }, []);
+
+        return (
+          <header className="bg-[#FDFCF5]/90 backdrop-blur-md sticky top-0 z-30 border-b border-[#1A1A1A]/10 shadow-2xs flex justify-between items-center w-full px-6 md:px-12 h-18 shrink-0">
+            <div className="flex items-center gap-4 md:gap-8">
+              {onToggleMobileMenu && (
+                <button 
+                  id="btn-mobile-menu"
+                  onClick={onToggleMobileMenu}
+                  className="md:hidden text-[#1A1A1A]/70 hover:text-[#1A1A1A] p-1.5 rounded-md hover:bg-[#EFECE5] transition-colors"
+                >
+                  <Icon name="menu" className="w-5 h-5" />
+                </button>
+              )}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => onNavigate('dashboard')}
+                  className={`font-sans text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 rounded-md transition-all ${
+                    currentTab === 'dashboard' ? 'text-[#FDFCF5] bg-[#1A1A1A] shadow-2xs' : 'text-[#1A1A1A]/60 hover:text-[#1A1A1A] hover:bg-[#EFECE5]'
+                  }`}
+                >
+                  Overview
+                </button>
+                <button
+                  onClick={() => onNavigate('analytics')}
+                  className={`font-sans text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 rounded-md transition-all ${
+                    currentTab === 'analytics' ? 'text-[#FDFCF5] bg-[#1A1A1A] shadow-2xs' : 'text-[#1A1A1A]/60 hover:text-[#1A1A1A] hover:bg-[#EFECE5]'
+                  }`}
+                >
+                  Analytics
+                </button>
+                <button
+                  onClick={() => onNavigate('reports')}
+                  className={`font-sans text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 rounded-md transition-all ${
+                    currentTab === 'reports' ? 'text-[#FDFCF5] bg-[#1A1A1A] shadow-2xs' : 'text-[#1A1A1A]/60 hover:text-[#1A1A1A] hover:bg-[#EFECE5]'
+                  }`}
+                >
+                  Reports
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 sm:gap-5">
+              <div className="relative">
+                {showSearchInput ? (
+                  <div className="flex items-center bg-[#FFFFFF] border border-[#1A1A1A]/30 rounded-md px-3 py-1.5 w-48 sm:w-64 shadow-2xs">
+                    <Icon name="search" className="w-3.5 h-3.5 text-[#1A1A1A]/60 mr-2" />
+                    <input
+                      type="text"
+                      placeholder="Search bookings, menu..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      autoFocus
+                      className="bg-transparent text-[12px] text-[#1A1A1A] focus:outline-none w-full placeholder:text-[#1A1A1A]/40"
+                    />
+                    <button onClick={() => { setShowSearchInput(false); setSearchQuery(''); }} className="text-[#1A1A1A]/40 hover:text-[#1A1A1A] text-[11px] ml-1">
+                      <Icon name="close" className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <button onClick={() => setShowSearchInput(true)} className="text-[#1A1A1A]/70 hover:text-[#1A1A1A] p-2 rounded-full hover:bg-[#EFECE5]">
+                    <Icon name="search" className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              <div className="relative" ref={notifRef}>
+                <button onClick={() => setShowNotifications(!showNotifications)} className="text-[#1A1A1A]/70 hover:text-[#1A1A1A] relative p-2 rounded-full hover:bg-[#EFECE5]">
+                  <Icon name="notifications" className="w-4 h-4" />
+                  {unreadCount > 0 && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#1A1A1A] rounded-full ring-2 ring-[#FDFCF5]" />}
+                </button>
+                {showNotifications && (
+                  <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-[#FFFFFF] border border-[#1A1A1A]/15 rounded-md shadow-xl py-3 z-50">
+                    <div className="flex items-center justify-between px-4 pb-3 border-b border-[#1A1A1A]/10">
+                      <div className="flex items-center gap-2">
+                        <span className="font-serif italic font-semibold text-[15px] text-[#1A1A1A]">Notifications</span>
+                        {unreadCount > 0 && (
+                          <span className="px-2 py-0.5 text-[9px] font-bold tracking-wider uppercase bg-[#EFECE5] text-[#1A1A1A] rounded-full border border-[#1A1A1A]/15">
+                            {unreadCount} new
+                          </span>
+                        )}
+                      </div>
+                      {unreadCount > 0 && (
+                        <button onClick={markAllRead} className="text-[11px] font-medium text-[#1A1A1A] hover:underline flex items-center gap-1">
+                          <Icon name="done_all" className="w-3 h-3" /> Mark read
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-72 overflow-y-auto divide-y divide-[#1A1A1A]/5">
+                      {notifications.map((n) => (
+                        <div key={n.id} onClick={() => { onNavigate(n.type); setShowNotifications(false); }} className={`p-3.5 hover:bg-[#F7F5EE] cursor-pointer transition-colors flex gap-3 items-start ${n.unread ? 'bg-[#F7F5EE]/60' : ''}`}>
+                          <div className="w-7 h-7 rounded-full bg-[#EFECE5] border border-[#1A1A1A]/15 text-[#1A1A1A] flex items-center justify-center shrink-0 mt-0.5">
+                            <Icon name="auto_awesome" className="w-3.5 h-3.5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[12px] font-bold text-[#1A1A1A] truncate">{n.title}</p>
+                            <p className="text-[11px] text-[#1A1A1A]/70 line-clamp-2 mt-0.5">{n.desc}</p>
+                            <span className="text-[9px] font-semibold text-[#1A1A1A]/40 mt-1 block uppercase tracking-wider">{n.time}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="h-5 w-px bg-[#1A1A1A]/15" />
+
+              <div className="relative" ref={profileRef}>
+                <button onClick={() => setShowProfileMenu(!showProfileMenu)} className="flex items-center gap-3 group focus:outline-none">
+                  <div className="text-right hidden lg:block">
+                    <p className="text-[12px] font-bold text-[#1A1A1A] group-hover:opacity-80 transition-opacity leading-tight">Admin Profile</p>
+                    <p className="text-[9px] font-bold tracking-[0.2em] uppercase text-[#1A1A1A]/50">Curator</p>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-[#EFECE5] overflow-hidden border border-[#1A1A1A]/20 group-hover:border-[#1A1A1A] transition-colors shadow-2xs">
+                    <img 
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAZc5E1AEgsuBCDAVRxT7BpvdlCpHFo2bCh8CxNW6WhfsDc6vjpXGfIDaA-i_a2l7mRE4ajp6OHS0-L4EbdKYkZA-LNIRAbLabxWYNJ9YHr2j_ZQ9FKf7E4w6DfIxzDNAKEw1c2TK982NPACSLlYOvFmElUEutZn64RMp6FdnyJDXsCyXz3KMZ-2e_Hwlgx9nyE7DFJNDbf1_13m0yt_k2AYs7ggQGayE4WLItSEOxeZd55ffVXJuPPg" 
+                      alt="Chief Administrator" 
+                      className="w-full h-full object-cover grayscale contrast-125"
+                    />
+                  </div>
+                  <Icon name="keyboard_arrow_down" className="w-3.5 h-3.5 text-[#1A1A1A]/50 hidden sm:block" />
+                </button>
+                {showProfileMenu && (
+                  <div className="absolute right-0 mt-3 w-64 bg-[#FFFFFF] border border-[#1A1A1A]/15 rounded-md shadow-xl py-2 z-50">
+                    <div className="px-4 py-3 border-b border-[#1A1A1A]/10">
+                      <p className="text-[13px] font-bold text-[#1A1A1A]">Dawit Kassahun</p>
+                      <p className="text-[10px] font-bold tracking-wider uppercase text-[#1A1A1A]/60">Chief Curator & Director</p>
+                      <p className="text-[10px] text-[#1A1A1A]/40 mt-0.5 font-mono">dawitkassahun143@gmail.com</p>
+                    </div>
+                    <div className="py-1">
+                      <button onClick={() => { onNavigate('settings'); setShowProfileMenu(false); }} className="w-full text-left px-4 py-2 text-[12px] text-[#1A1A1A]/80 hover:bg-[#F7F5EE] font-medium">
+                        Restaurant Settings
+                      </button>
+                      <button onClick={() => { onNavigate('consumer_site'); setShowProfileMenu(false); }} className="w-full text-left px-4 py-2 text-[12px] font-bold text-[#1A1A1A] hover:bg-[#F7F5EE] flex items-center justify-between">
+                        <span>Public Exhibition View</span>
+                        <Icon name="open_in_new" className="w-3.5 h-3.5 text-[#1A1A1A]/60" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </header>
+        );
+      };
+
+      // --- DashboardView Component ---[cite: 4]
+      const DashboardView = ({ reservations, menuItems, siteSettings, onNavigateToReservations, onNavigateToMenu, onNavigateToMedia, onManagePromotion, onOpenReservationDetails }) => {
+        const totalReservationsCount = 1248 + reservations.length;
+        const menuItemsCount = menuItems.length > 0 ? menuItems.length : 84;
+        const requiringUpdatesCount = menuItems.filter(m => !m.available).length;
+        const featuredDish = menuItems.find(m => m.isFeatured) || menuItems[0];
+        const recentActivities = reservations.slice(0, 4);
+
+        return (
+          <div className="flex-1 p-6 md:p-12 max-w-[1600px] mx-auto w-full">
+            <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between border-b border-[#1A1A1A]/10 pb-8 gap-4">
+              <div>
+                <div className="text-[10px] font-bold tracking-[0.3em] uppercase mb-3 text-[#1A1A1A]/50 font-sans">
+                  Selection 01 / Studio Operations
+                </div>
+                <h2 className="font-serif italic text-[36px] md:text-[52px] font-normal text-[#1A1A1A] tracking-tight leading-[0.95]">
+                  Totot Overview
+                </h2>
+                <p className="text-[14px] text-[#1A1A1A]/70 font-medium mt-3 max-w-xl">
+                  Real-time culinary curation, guest reservations, and gastronomic catalog monitoring.
+                </p>
+              </div>
+              <div className="hidden lg:flex items-center gap-6 text-right">
+                <div>
+                  <span className="text-[9px] font-bold tracking-[0.25em] uppercase text-[#1A1A1A]/40 block">Location</span>
+                  <span className="text-[12px] font-bold uppercase text-[#1A1A1A]">Gerji, Addis Ababa</span>
+                </div>
+                <div className="h-8 w-px bg-[#1A1A1A]/10" />
+                <div>
+                  <span className="text-[9px] font-bold tracking-[0.25em] uppercase text-[#1A1A1A]/40 block">Status</span>
+                  <span className="text-[12px] font-bold uppercase text-[#1A1A1A] flex items-center gap-1.5 justify-end">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" /> Live Service
+                  </span>
+                </div>
+              </div>
+            </header>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-6 mb-10">
+              <div onClick={onNavigateToReservations} className="bento-card lg:col-span-3 p-7 flex flex-col justify-between group cursor-pointer">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-[10px] font-bold text-[#1A1A1A]/60 uppercase tracking-[0.2em] font-sans">Reservations</span>
+                  <div className="w-8 h-8 rounded-full border border-[#1A1A1A]/15 flex items-center justify-center text-[#1A1A1A] group-hover:border-[#1A1A1A] transition-colors">
+                    <Icon name="book_online" className="text-[17px]" />
+                  </div>
+                </div>
+                <div>
+                  <div className="font-serif italic text-[44px] font-normal text-[#1A1A1A] mb-1 leading-none">{totalReservationsCount.toLocaleString()}</div>
+                  <div className="text-[11px] font-medium text-[#1A1A1A]/60 flex items-center gap-1.5 mt-2">
+                    <span className="text-emerald-700 flex items-center gap-0.5 font-bold"><Icon name="arrow_upward" className="w-3 h-3" /> +12%</span>
+                    <span>vs prior cycle</span>
+                  </div>
+                </div>
+              </div>
+
+              <div onClick={onNavigateToMenu} className="bento-card lg:col-span-3 p-7 flex flex-col justify-between group cursor-pointer">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-[10px] font-bold text-[#1A1A1A]/60 uppercase tracking-[0.2em] font-sans">Menu Catalog</span>
+                  <div className="w-8 h-8 rounded-full border border-[#1A1A1A]/15 flex items-center justify-center text-[#1A1A1A] group-hover:border-[#1A1A1A] transition-colors">
+                    <Icon name="restaurant" className="text-[17px]" />
+                  </div>
+                </div>
+                <div>
+                  <div className="font-serif italic text-[44px] font-normal text-[#1A1A1A] mb-1 leading-none">{menuItemsCount}</div>
+                  <div className="text-[11px] text-[#1A1A1A]/60 mt-2 font-medium">
+                    {requiringUpdatesCount > 0 ? `${requiringUpdatesCount} unavailable` : 'All offerings active'}
+                  </div>
+                </div>
+              </div>
+
+              <div onClick={onNavigateToMedia} className="bento-card lg:col-span-3 p-7 flex flex-col justify-between group cursor-pointer">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-[10px] font-bold text-[#1A1A1A]/60 uppercase tracking-[0.2em] font-sans">Archival Media</span>
+                  <div className="w-8 h-8 rounded-full border border-[#1A1A1A]/15 flex items-center justify-center text-[#1A1A1A] group-hover:border-[#1A1A1A] transition-colors">
+                    <Icon name="photo_library" className="text-[17px]" />
+                  </div>
+                </div>
+                <div>
+                  <div className="font-serif italic text-[44px] font-normal text-[#1A1A1A] mb-1 leading-none">156</div>
+                  <div className="text-[11px] text-[#1A1A1A]/60 mt-2 font-medium">Curated assets on bento</div>
+                </div>
+              </div>
+
+              <div className="bento-card lg:col-span-3 p-7 flex flex-col justify-between group">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-[10px] font-bold text-[#1A1A1A]/60 uppercase tracking-[0.2em] font-sans">Service Registry</span>
+                  <div className="w-8 h-8 rounded-full border border-[#1A1A1A]/15 flex items-center justify-center text-[#1A1A1A]">
+                    <Icon name="location_on" className="text-[17px]" />
+                  </div>
+                </div>
+                <div>
+                  <div className="font-serif italic text-[22px] font-normal text-[#1A1A1A] mb-1.5 flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-600" />
+                    <span>Accepting Guests</span>
+                  </div>
+                  <div className="text-[11px] text-[#1A1A1A]/60 mt-2 font-medium">
+                    {siteSettings.cityCountry || 'Addis Ababa, ET'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className="bento-card lg:col-span-8 p-8 flex flex-col">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#1A1A1A]/10">
+                  <div>
+                    <span className="text-[9px] font-bold tracking-[0.25em] uppercase text-[#1A1A1A]/40 block mb-1">Recent Guest Manifest</span>
+                    <h3 className="font-serif italic text-[22px] font-normal text-[#1A1A1A]">Activity & Bookings</h3>
+                  </div>
+                  <button onClick={onNavigateToReservations} className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#1A1A1A] hover:opacity-60 flex items-center gap-1.5 group">
+                    <span>View Manifest</span>
+                    <Icon name="arrow_forward" className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+
+                <div className="flex-1 overflow-x-auto">
+                  <div className="min-w-[550px] flex flex-col w-full">
+                    <div className="grid grid-cols-12 gap-4 pb-3 border-b border-[#1A1A1A]/10 text-[10px] font-bold text-[#1A1A1A]/50 uppercase tracking-[0.2em] font-sans">
+                      <div className="col-span-5">Patron</div>
+                      <div className="col-span-2">Party</div>
+                      <div className="col-span-3">Schedule</div>
+                      <div className="col-span-2 text-right">Status</div>
+                    </div>
+                    <div className="divide-y divide-[#1A1A1A]/8">
+                      {recentActivities.map((res) => {
+                        const initials = res.customerName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                        return (
+                          <div key={res.id} onClick={() => onOpenReservationDetails(res)} className="grid grid-cols-12 gap-4 py-3.5 items-center cursor-pointer hover:bg-[#F7F5EE] px-2 rounded-md">
+                            <div className="col-span-5 flex items-center gap-3">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 border ${res.isVIP ? 'bg-[#1A1A1A] text-[#FDFCF5] border-[#1A1A1A]' : 'bg-[#EFECE5] text-[#1A1A1A] border-[#1A1A1A]/15'}`}>
+                                {initials}
+                              </div>
+                              <div className="truncate">
+                                <p className="text-[13px] font-bold text-[#1A1A1A] truncate">{res.customerName}</p>
+                                {res.specialRequests && <p className="text-[11px] text-[#1A1A1A]/50 truncate">{res.specialRequests}</p>}
+                              </div>
+                            </div>
+                            <div className="col-span-2 text-[12px] font-medium text-[#1A1A1A]/80">{res.partySize} Guests</div>
+                            <div className="col-span-3 text-[12px] font-medium text-[#1A1A1A]/80">{res.date.includes('2026-08-25') ? 'Today' : res.date}, {res.time}</div>
+                            <div className="col-span-2 flex justify-end">
+                              {res.isVIP ? (
+                                <span className="px-2.5 py-0.5 rounded-full bg-[#1A1A1A] text-[#FDFCF5] text-[9px] font-bold tracking-wider uppercase flex items-center gap-1">
+                                  <Icon name="star" className="w-2.5 h-2.5" /> VIP
+                                </span>
+                              ) : (
+                                <span className="px-2.5 py-0.5 rounded-full bg-[#EFECE5] border border-[#1A1A1A]/15 text-[#1A1A1A] text-[9px] font-bold uppercase">
+                                  {res.status}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bento-card lg:col-span-4 p-0 overflow-hidden relative group min-h-[400px] flex flex-col justify-end border border-[#1A1A1A]/15 bg-[#EFECE5]">
+                <div 
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                  style={{ backgroundImage: `url('${featuredDish ? featuredDish.image : "https://lh3.googleusercontent.com/aida-public/AB6AXuAP0SA8WxJYmTktZ4RImC9_gav0izlwyP8RPxHnYudZY8WkQpiKiY65Ms8O_ATNDi7pjlXDmCoUtK52_-peuuxMQO6BARQ54TsDvULUFrQqreiXdwE6O8x5i-hYM8v-siKuXE7ofKvV7SAxSv8meHXfn6Um17pMTMZ2ZqHMZhP0yKvgXDO35mWpn_QzJwECwMRyYl6VFuedGGB70dtt8guAbMBWQ5eBJZ53ZdUXxYbKkIOcmMw8ZXHzaA"}')` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#FDFCF5] via-[#FDFCF5]/90 to-transparent z-10" />
+                <div className="relative z-20 p-7 flex flex-col justify-end">
+                  <div className="text-[9px] font-bold tracking-[0.3em] uppercase text-[#1A1A1A]/50 mb-2">Featured Gastronomy</div>
+                  <h3 className="font-serif italic text-[26px] font-bold text-[#1A1A1A] mb-2 leading-snug">{featuredDish ? featuredDish.name : 'Special Kitfo Reserve'}</h3>
+                  <p className="text-[13px] text-[#1A1A1A]/80 leading-relaxed mb-5 line-clamp-2 font-medium">{featuredDish ? featuredDish.description : 'Highlighting tonight fine dishes.'}</p>
+                  <button onClick={onManagePromotion} className="w-full py-2.5 bg-[#1A1A1A] text-[#FDFCF5] font-bold text-[11px] tracking-[0.2em] uppercase rounded-md shadow-2xs">Curate Promotion</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // --- MenuCMSView Component ---[cite: 4]
+      const MenuCMSView = ({ menuItems, onToggleAvailability, onAddNewItem, onEditItem, onDeleteItem, onExportJSON }) => {
+        const [activeTab, setActiveTab] = useState('specialties');
+        const [searchQuery, setSearchQuery] = useState('');
+
+        const filteredItems = menuItems.filter(item => {
+          const matchesCategory = item.category === activeTab;
+          const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.description.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchesCategory && matchesSearch;
+        });
+
+        return (
+          <div className="flex-1 p-6 md:p-12 max-w-[1600px] mx-auto w-full">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-6 border-b border-[#1A1A1A]/10 gap-4">
+              <div>
+                <div className="text-[10px] font-bold tracking-[0.3em] uppercase mb-2 text-[#1A1A1A]/50 font-sans">Selection 03 / Culinary Portfolio</div>
+                <h2 className="font-serif italic text-[32px] md:text-[44px] font-normal text-[#1A1A1A] tracking-tight leading-[0.95]">Gastronomic Catalog</h2>
+                <p className="text-[14px] text-[#1A1A1A]/70 font-medium max-w-xl mt-2">Curate signature offerings, market pricing, and live kitchen availability.</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <button onClick={onExportJSON} className="px-4 py-2.5 border border-[#1A1A1A]/15 text-[#1A1A1A] hover:bg-[#EFECE5] text-[11px] font-bold tracking-[0.15em] uppercase rounded-md flex items-center gap-2 bg-[#FFFFFF]">
+                  <Icon name="download" className="w-3.5 h-3.5" /> Export Catalog
+                </button>
+                <button onClick={onAddNewItem} className="px-5 py-2.5 bg-[#1A1A1A] text-[#FDFCF5] hover:bg-[#333333] text-[11px] font-bold tracking-[0.2em] uppercase rounded-md flex items-center gap-2">
+                  <Icon name="add" className="w-3.5 h-3.5" /> Add Offering
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#1A1A1A]/10 mb-6 gap-4 pb-2">
+              <div className="flex gap-2 overflow-x-auto">
+                {['specialties', 'sides', 'drinks'].map(cat => (
+                  <button key={cat} onClick={() => setActiveTab(cat)} className={`px-5 py-2.5 text-[11px] font-bold tracking-[0.15em] uppercase rounded-t-md transition-all ${activeTab === cat ? 'text-[#1A1A1A] border-b-2 border-[#1A1A1A] bg-[#EFECE5]/80' : 'text-[#1A1A1A]/60'}`}>
+                    {cat}
+                  </button>
+                ))}
+              </div>
+              <div className="relative w-full sm:w-64">
+                <Icon name="search" className="w-3.5 h-3.5 text-[#1A1A1A]/40 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input type="text" placeholder={`Search ${activeTab}...`} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-[#FFFFFF] border border-[#1A1A1A]/15 rounded-md pl-9 pr-3 py-1.5 text-[12px] text-[#1A1A1A]" />
+              </div>
+            </div>
+
+            <div className="bento-card rounded-md overflow-hidden shadow-2xs">
+              <div className="grid grid-cols-12 gap-4 p-4 border-b border-[#1A1A1A]/10 bg-[#EFECE5]/60 text-[10px] font-bold text-[#1A1A1A]/50 uppercase tracking-[0.2em] font-sans">
+                <div className="col-span-1 hidden md:block">Visual</div>
+                <div className="col-span-6 md:col-span-5">Dish & Description</div>
+                <div className="col-span-3 md:col-span-2">Pricing (ETB)</div>
+                <div className="col-span-3 md:col-span-2 text-center">Availability</div>
+                <div className="col-span-12 md:col-span-2 text-right">Actions</div>
+              </div>
+              <div className="divide-y divide-[#1A1A1A]/8">
+                {filteredItems.map(item => (
+                  <div key={item.id} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-[#F7F5EE]">
+                    <div className="col-span-1 hidden md:block">
+                      <img src={item.image} alt={item.name} className="w-11 h-11 rounded-md object-cover border border-[#1A1A1A]/15" />
+                    </div>
+                    <div className="col-span-6 md:col-span-5">
+                      <p className="text-[14px] font-bold text-[#1A1A1A]">{item.name}</p>
+                      <p className="text-[12px] text-[#1A1A1A]/70 line-clamp-1">{item.description}</p>
+                    </div>
+                    <div className="col-span-3 md:col-span-2 text-[13px] font-bold font-mono">ETB {item.price.toFixed(2)}</div>
+                    <div className="col-span-3 md:col-span-2 text-center">
+                      <button onClick={() => onToggleAvailability(item.id)} className={`px-3 py-1 text-[10px] font-bold uppercase rounded-full ${item.available ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                        {item.available ? 'In Stock' : 'Out'}
+                      </button>
+                    </div>
+                    <div className="col-span-12 md:col-span-2 flex justify-end gap-2">
+                      <button onClick={() => onEditItem(item)} className="p-1 hover:bg-[#EFECE5] rounded"><Icon name="edit" className="w-4 h-4" /></button>
+                      <button onClick={() => onDeleteItem(item.id)} className="p-1 text-rose-600 hover:bg-rose-50 rounded"><Icon name="delete" className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // --- ReservationsView Component ---[cite: 4]
+      const ReservationsView = ({ reservations, onUpdateStatus, onDeleteReservation, onOpenNewReservation, onOpenReservationDetails }) => {
+        const [searchQuery, setSearchQuery] = useState('');
+        const [statusFilter, setStatusFilter] = useState('all');
+
+        const filtered = reservations.filter(res => {
+          const matchesSearch = res.customerName.toLowerCase().includes(searchQuery.toLowerCase()) || res.contactPhone.includes(searchQuery);
+          const matchesStatus = statusFilter === 'all' || res.status.toLowerCase() === statusFilter.toLowerCase();
+          return matchesSearch && matchesStatus;
+        });
+
+        return (
+          <div className="flex-1 p-6 md:p-12 max-w-[1600px] mx-auto w-full">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-6 border-b border-[#1A1A1A]/10 gap-4">
+              <div>
+                <div className="text-[10px] font-bold tracking-[0.3em] uppercase mb-2 text-[#1A1A1A]/50 font-sans">Selection 02 / Guest Manifest</div>
+                <h2 className="font-serif italic text-[32px] md:text-[44px] font-normal text-[#1A1A1A] tracking-tight leading-[0.95]">Booking Ledger</h2>
+                <p className="text-[14px] text-[#1A1A1A]/70 font-medium max-w-xl mt-2">Oversee incoming reservations, party capacity, and dining logs.</p>
+              </div>
+              <button onClick={onOpenNewReservation} className="px-5 py-2.5 bg-[#1A1A1A] text-[#FDFCF5] hover:bg-[#333333] text-[11px] font-bold tracking-[0.2em] uppercase rounded-md flex items-center gap-2">
+                <Icon name="add" className="w-3.5 h-3.5" /> New Reservation
+              </button>
+            </div>
+
+            <div className="bento-card p-4 mb-6 flex flex-wrap gap-4 items-center justify-between">
+              <div className="relative w-full sm:w-72">
+                <Icon name="search" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#1A1A1A]/40 w-4 h-4" />
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search guest name or phone..." className="bento-input w-full rounded-md py-2 pl-10 pr-4 text-[12px]" />
+              </div>
+              <div className="flex gap-2">
+                {['all', 'pending', 'confirmed', 'completed', 'cancelled'].map(st => (
+                  <button key={st} onClick={() => setStatusFilter(st)} className={`px-3 py-1 rounded text-[10px] font-bold uppercase ${statusFilter === st ? 'bg-[#1A1A1A] text-[#FDFCF5]' : 'bg-[#EFECE5] text-[#1A1A1A]'}`}>
+                    {st}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="bento-card rounded-md overflow-hidden">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-[#1A1A1A]/10 bg-[#EFECE5]/60 text-[10px] font-bold text-[#1A1A1A]/50 uppercase tracking-[0.2em] font-sans">
+                    <th className="py-3.5 px-6">Patron</th>
+                    <th className="py-3.5 px-6">Contact</th>
+                    <th className="py-3.5 px-6 text-center">Guests</th>
+                    <th className="py-3.5 px-6">Schedule</th>
+                    <th className="py-3.5 px-6">Status</th>
+                    <th className="py-3.5 px-6 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#1A1A1A]/8">
+                  {filtered.map(res => (
+                    <tr key={res.id} className="hover:bg-[#F7F5EE]">
+                      <td className="py-3.5 px-6 cursor-pointer" onClick={() => onOpenReservationDetails(res)}>
+                        <p className="text-[13px] font-bold text-[#1A1A1A]">{res.customerName}</p>
+                        {res.isVIP && <span className="text-[9px] font-bold text-amber-700">★ VIP PATRON</span>}
+                      </td>
+                      <td className="py-3.5 px-6 text-[12px] font-mono">{res.contactPhone}</td>
+                      <td className="py-3.5 px-6 text-center text-[12px] font-bold">{res.partySize}</td>
+                      <td className="py-3.5 px-6 text-[12px]">{res.date} @ {res.time}</td>
+                      <td className="py-3.5 px-6">
+                        <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase bg-[#EFECE5] border border-[#1A1A1A]/15">{res.status}</span>
+                      </td>
+                      <td className="py-3.5 px-6 text-right flex justify-end gap-2">
+                        <button onClick={() => onUpdateStatus(res.id, 'Confirmed')} className="text-emerald-700 text-[11px] font-bold">Confirm</button>
+                        <button onClick={() => onDeleteReservation(res.id)} className="text-rose-700 text-[11px] font-bold">Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      };
+
+      // --- SettingsView Component ---[cite: 4]
+      const SettingsView = ({ settings, onSaveSettings }) => {
+        const [formData, setFormData] = useState(settings);
+        const [savedMsg, setSavedMsg] = useState(false);
+
+        const handleSave = () => {
+          onSaveSettings(formData);
+          setSavedMsg(true);
+          setTimeout(() => setSavedMsg(false), 3000);
+        };
+
+        return (
+          <div className="flex-1 p-6 md:p-12 max-w-[1600px] mx-auto w-full">
+            <div className="mb-10 pb-6 border-b border-[#1A1A1A]/10">
+              <div className="text-[10px] font-bold tracking-[0.3em] uppercase mb-2 text-[#1A1A1A]/50 font-sans">Selection 07 / Identity</div>
+              <h2 className="font-serif italic text-[32px] md:text-[44px] font-normal text-[#1A1A1A] tracking-tight leading-[0.95] mb-2">Establishment Settings</h2>
+              <p className="text-[14px] text-[#1A1A1A]/70 font-medium">Configure public metadata, branding, and location info.</p>
+            </div>
+
+            <div className="bento-card p-6 md:p-8 max-w-2xl">
+              {savedMsg && <div className="mb-4 p-3 bg-emerald-100 text-emerald-800 font-bold rounded text-sm">Settings saved successfully!</div>}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]/60 mb-1">Brand Name</label>
+                  <input type="text" value={formData.brandName} onChange={(e) => setFormData({...formData, brandName: e.target.value})} className="bento-input w-full p-2 rounded text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]/60 mb-1">Tagline</label>
+                  <input type="text" value={formData.tagline} onChange={(e) => setFormData({...formData, tagline: e.target.value})} className="bento-input w-full p-2 rounded text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]/60 mb-1">Address Coordinates</label>
+                  <input type="text" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} className="bento-input w-full p-2 rounded text-sm" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]/60 mb-1">Telephone Line</label>
+                  <input type="text" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="bento-input w-full p-2 rounded text-sm" />
+                </div>
+                <button onClick={handleSave} className="px-6 py-2.5 bg-[#1A1A1A] text-[#FDFCF5] font-bold text-xs uppercase tracking-wider rounded">Save Configuration</button>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // --- ConsumerSiteView Component ---[cite: 4]
+      const ConsumerSiteView = ({ menuItems, siteSettings, onBackToAdmin }) => {
+        return (
+          <div className="min-h-screen bg-[#FDFCF5] text-[#1A1A1A] font-sans pb-24">
+            <header className="py-6 px-8 border-b border-[#1A1A1A]/10 flex justify-between items-center bg-[#FFFFFF]">
+              <div>
+                <h1 className="font-serif italic text-2xl font-bold">{siteSettings.brandName}</h1>
+                <p className="text-xs text-[#1A1A1A]/60 uppercase tracking-widest">{siteSettings.tagline}</p>
+              </div>
+              <button onClick={onBackToAdmin} className="px-4 py-2 border border-[#1A1A1A] text-xs font-bold uppercase tracking-wider hover:bg-[#1A1A1A] hover:text-[#FDFCF5] transition-colors">
+                Back to CMS Studio
+              </button>
+            </header>
+
+            <section className="py-16 px-8 max-w-5xl mx-auto text-center">
+              <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#1A1A1A]/40 block mb-3">Authentic Gurage Culinary</span>
+              <h2 className="font-serif italic text-4xl md:text-5xl mb-4">Pure Flavor & Heritage</h2>
+              <p className="text-sm max-w-xl mx-auto text-[#1A1A1A]/70 leading-relaxed">{siteSettings.description}</p>
+            </section>
+
+            <section className="px-8 max-w-6xl mx-auto">
+              <h3 className="font-serif italic text-2xl mb-8 border-b border-[#1A1A1A]/10 pb-4">Specialties Menu</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {menuItems.filter(m => m.available).map(item => (
+                  <div key={item.id} className="bento-card overflow-hidden group">
+                    <img src={item.image} alt={item.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="font-serif italic text-lg font-bold">{item.name}</h4>
+                        <span className="font-mono text-xs font-bold bg-[#EFECE5] px-2 py-1 rounded">ETB {item.price}</span>
+                      </div>
+                      <p className="text-xs text-[#1A1A1A]/60 leading-relaxed">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        );
+      };
+
+      // --- Main Single-App Shell ---[cite: 4]
+      const App = () => {
+        const [currentTab, setCurrentTab] = useState('dashboard');
+        const [menuItems, setMenuItems] = useState(INITIAL_MENU_ITEMS);
+        const [reservations, setReservations] = useState(INITIAL_RESERVATIONS);
+        const [siteSettings, setSiteSettings] = useState(INITIAL_SITE_SETTINGS);
+        const [mobileOpen, setMobileOpen] = useState(false);
+        const [selectedReservation, setSelectedReservation] = useState(null);
+
+        // Callbacks & Actions[cite: 4]
+        const handleToggleAvailability = (id) => {
+          setMenuItems(prev => prev.map(item => item.id === id ? { ...item, available: !item.available } : item));
+        };
+
+        const handleAddNewMenuItem = () => {
+          const name = prompt("Enter offering title:");
+          if (!name) return;
+          const price = parseFloat(prompt("Enter price (ETB):", "500") || "0");
+          const newItem = {
+            id: `menu-${Date.now()}`,
+            name,
+            description: "Fresh handcrafted authentic Ethiopian dish.",
+            price,
+            category: 'specialties',
+            image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg',
+            available: true,
+            isFeatured: false
+          };
+          setMenuItems(prev => [newItem, ...prev]);
+        };
+
+        const handleEditMenuItem = (item) => {
+          const newName = prompt("Edit item name:", item.name);
+          if (!newName) return;
+          const newPrice = parseFloat(prompt("Edit price (ETB):", item.price.toString()) || item.price.toString());
+          setMenuItems(prev => prev.map(m => m.id === item.id ? { ...m, name: newName, price: newPrice } : m));
+        };
+
+        const handleDeleteMenuItem = (id) => {
+          if (confirm("Are you sure you want to delete this menu item?")) {
+            setMenuItems(prev => prev.filter(m => m.id !== id));
+          }
+        };
+
+        const handleUpdateReservationStatus = (id, status) => {
+          setReservations(prev => prev.map(r => r.id === id ? { ...r, status } : r));
+        };
+
+        const handleDeleteReservation = (id) => {
+          if (confirm("Delete this reservation log?")) {
+            setReservations(prev => prev.filter(r => r.id !== id));
+          }
+        };
+
+        const handleOpenNewReservation = () => {
+          const customerName = prompt("Enter guest full name:");
+          if (!customerName) return;
+          const partySize = parseInt(prompt("Enter party size:", "2") || "2", 10);
+          const newRes = {
+            id: `res-${Date.now()}`,
+            customerName,
+            contactPhone: '+251 91 000 0000',
+            partySize,
+            date: '2026-08-26',
+            time: '19:00',
+            status: 'Pending',
+            isVIP: false,
+            specialRequests: 'Walk-in priority reservation',
+            createdAt: '2026-08-25 12:00'
+          };
+          setReservations(prev => [newRes, ...prev]);
+          setCurrentTab('reservations');
+        };
+
+        const handleExportJSON = () => {
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(menuItems, null, 2));
+          const dlAnchorElem = document.createElement('a');
+          dlAnchorElem.setAttribute("href", dataStr);
+          dlAnchorElem.setAttribute("download", "totot_menu_catalog.json");
+          dlAnchorElem.click();
+        };
+
+        const pendingCount = reservations.filter(r => r.status === 'Pending').length;
+
+        if (currentTab === 'consumer_site') {
+          return <ConsumerSiteView menuItems={menuItems} siteSettings={siteSettings} onBackToAdmin={() => setCurrentTab('dashboard')} />;
+        }
+
+        return (
+          <div className="flex h-screen overflow-hidden bg-[#FDFCF5]">
+            <Sidebar
+              currentTab={currentTab}
+              onSelectTab={setCurrentTab}
+              onOpenNewReservation={handleOpenNewReservation}
+              pendingReservationsCount={pendingCount}
+              mobileOpen={mobileOpen}
+              onCloseMobile={() => setMobileOpen(false)}
+            />
+
+            <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+              <TopAppBar
+                currentTab={currentTab}
+                brandName={siteSettings.brandName}
+                onNavigate={setCurrentTab}
+                onOpenNewReservation={handleOpenNewReservation}
+                onToggleMobileMenu={() => setMobileOpen(true)}
+              />
+
+              <main className="flex-1">
+                {currentTab === 'dashboard' && (
+                  <DashboardView
+                    reservations={reservations}
+                    menuItems={menuItems}
+                    siteSettings={siteSettings}
+                    onNavigateToReservations={() => setCurrentTab('reservations')}
+                    onNavigateToMenu={() => setCurrentTab('menu')}
+                    onNavigateToMedia={() => setCurrentTab('bento_media')}
+                    onManagePromotion={() => setCurrentTab('menu')}
+                    onOpenReservationDetails={(res) => setSelectedReservation(res)}
+                  />
+                )}
+
+                {currentTab === 'menu' && (
+                  <MenuCMSView
+                    menuItems={menuItems}
+                    onToggleAvailability={handleToggleAvailability}
+                    onAddNewItem={handleAddNewMenuItem}
+                    onEditItem={handleEditMenuItem}
+                    onDeleteItem={handleDeleteMenuItem}
+                    onExportJSON={handleExportJSON}
+                  />
+                )}
+
+                {currentTab === 'reservations' && (
+                  <ReservationsView
+                    reservations={reservations}
+                    onUpdateStatus={handleUpdateReservationStatus}
+                    onDeleteReservation={handleDeleteReservation}
+                    onOpenNewReservation={handleOpenNewReservation}
+                    onOpenReservationDetails={(res) => setSelectedReservation(res)}
+                  />
+                )}
+
+                {currentTab === 'settings' && (
+                  <SettingsView
+                    settings={siteSettings}
+                    onSaveSettings={setSiteSettings}
+                  />
+                )}
+
+                {(currentTab === 'bento_media' || currentTab === 'analytics' || currentTab === 'reports') && (
+                  <div className="p-12 text-center">
+                    <h3 className="font-serif italic text-3xl mb-2 capitalize">{currentTab.replace('_', ' ')} Module</h3>
+                    <p className="text-sm text-[#1A1A1A]/60 max-w-md mx-auto mb-6">This section is currently synced with the central Adulis Luxury Cloud network.</p>
+                    <button onClick={() => setCurrentTab('dashboard')} className="px-5 py-2 bg-[#1A1A1A] text-[#FDFCF5] text-xs font-bold uppercase tracking-wider rounded">Return to Overview</button>
+                  </div>
+                )}
+              </main>
+            </div>
+
+            {/* Simple Reservation Details Modal */}
+            {selectedReservation && (
+              <div className="fixed inset-0 bg-[#1A1A1A]/50 z-50 flex items-center justify-center p-4">
+                <div className="bg-[#FFFFFF] bento-card max-w-md w-full p-6 relative">
+                  <button onClick={() => setSelectedReservation(null)} className="absolute top-4 right-4 text-xs font-bold">✕</button>
+                  <h3 className="font-serif italic text-xl font-bold mb-4">Reservation Manifest</h3>
+                  <div className="space-y-2 text-sm">
+                    <p><strong>Guest:</strong> {selectedReservation.customerName}</p>
+                    <p><strong>Phone:</strong> {selectedReservation.contactPhone}</p>
+                    <p><strong>Party Capacity:</strong> {selectedReservation.partySize} Guests</p>
+                    <p><strong>Schedule:</strong> {selectedReservation.date} at {selectedReservation.time}</p>
+                    <p><strong>Status:</strong> {selectedReservation.status}</p>
+                    {selectedReservation.specialRequests && <p className="mt-2 text-xs text-[#1A1A1A]/70"><strong>Notes:</strong> {selectedReservation.specialRequests}</p>}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+  </body>
+</html>
