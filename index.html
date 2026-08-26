@@ -3,1123 +3,818 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Totot Kitfo & Adulis Luxury - Enterprise Admin CMS & POS Hub</title>
-  <meta name="description" content="Artistic Flair dining management, menu CMS, orders, and real-time inventory for Totot Kitfo." />
+  <title>Totot Cultural Restaurant — Management & Admin Console</title>
   
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
-  <!-- React & Babel Engines -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            canvas: '#FDFCF5',
+            surface: '#FAF8F0',
+            tint: '#EFECE5',
+            charcoal: '#1A1A1A',
+            gold: '#C5A059'
+          }
+        }
+      }
+    }
+  </script>
 
-  <!-- Complete Embedded Design System & Granular Styles -->
+  <!-- React 18 & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <style>
-    :root {
-      --paper-bg: #FDFCF5;
-      --paper-card: #FFFFFF;
-      --paper-secondary: #EFECE5;
-      --paper-muted: #F5F3EB;
-      --charcoal: #1A1A1A;
-      --charcoal-light: #2A2A2A;
-      --charcoal-hover: #333333;
-      --gold: #C5A059;
-      --gold-light: #DFBA73;
-      --gold-dark: #9A7734;
-      --border-light: rgba(26, 26, 26, 0.1);
-      --border-[#1A1A1A]: rgba(26, 26, 26, 0.25);
-      --shadow-sm: 0 1px 3px rgba(26, 26, 26, 0.04);
-      --shadow-md: 0 4px 12px rgba(26, 26, 26, 0.06);
-      --shadow-lg: 0 10px 30px -10px rgba(26, 26, 26, 0.12);
-    }
-
-    /* Standard Reset & Typography */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      background-color: var(--paper-bg);
-      color: var(--charcoal);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.5;
+      background-color: #FDFCF5;
+      color: #1A1A1A;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
-
-    h1, h2, h3, h4, h5, h6, .font-serif {
-      font-family: 'Playfair Display', Georgia, serif;
-    }
-
-    /* Custom Component Class Library */
-    .cms-container {
-      max-width: 1400px;
-      margin-left: auto;
-      margin-right: auto;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-
     .bento-card {
-      background-color: var(--paper-card);
-      border: 1px solid var(--border-light);
-      border-radius: 0.75rem;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: var(--shadow-sm);
+      background-color: #FAF8F0;
+      border: 1px solid rgba(26, 26, 26, 0.12);
+      transition: all 0.2s ease;
     }
-
-    .bento-card:hover {
-      border-color: var(--border-[#1A1A1A]);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .bento-card-static {
-      background-color: var(--paper-card);
-      border: 1px solid var(--border-light);
-      border-radius: 0.75rem;
-      box-shadow: var(--shadow-sm);
-    }
-
     .bento-input {
       background-color: #FFFFFF;
       border: 1px solid rgba(26, 26, 26, 0.18);
-      color: var(--charcoal);
-      transition: all 0.2s ease-in-out;
-      border-radius: 0.375rem;
-      padding: 0.625rem 0.875rem;
-      font-size: 0.875rem;
-      width: 100%;
-    }
-
-    .bento-input:focus {
-      border-color: var(--charcoal);
+      color: #1A1A1A;
       outline: none;
-      box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+      transition: border-color 0.2s ease;
     }
-
-    .bento-label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: rgba(26, 26, 26, 0.7);
-      margin-bottom: 0.375rem;
+    .bento-input:focus {
+      border-color: #1A1A1A;
     }
-
-    .btn-primary {
-      background-color: var(--charcoal);
-      color: var(--paper-bg);
-      font-weight: 700;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.375rem;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      items-center: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .btn-primary:hover {
-      background-color: var(--charcoal-hover);
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background-color: var(--paper-secondary);
-      color: var(--charcoal);
-      font-weight: 700;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.375rem;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-      background-color: #E2DDD2;
-    }
-
-    .btn-danger {
-      background-color: #FEF2F2;
-      color: #DC2626;
-      border: 1px solid #FCA5A5;
-      font-weight: 600;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-danger:hover {
-      background-color: #FEE2E2;
-    }
-
-    .badge-specialties {
-      background-color: rgba(197, 160, 89, 0.15);
-      color: #7A6438;
-      border: 1px solid rgba(197, 160, 89, 0.3);
-    }
-
-    .badge-sides {
-      background-color: #ECFDF5;
-      color: #065F46;
-      border: 1px solid #A7F3D0;
-    }
-
-    .badge-drinks {
-      background-color: #EFF6FF;
-      color: #1E40AF;
-      border: 1px solid #BFDBFE;
-    }
-
-    .badge-[#EFECE5] {
-      background-color: #F3F4F6;
-      color: #374151;
-      border: 1px solid #E5E7EB;
-    }
-
-    /* Scrollbars */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--paper-bg);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background-color: rgba(26, 26, 26, 0.2);
-      border-radius: 9999px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: rgba(26, 26, 26, 0.4);
-    }
-
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      vertical-align: middle;
-      display: inline-block;
-    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #FDFCF5; }
+    ::-webkit-scrollbar-thumb { background: rgba(26, 26, 26, 0.2); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(26, 26, 26, 0.4); }
   </style>
 </head>
-<body>
-  <div id="root"></div>
+<body class="overflow-hidden">
 
-  <!-- Firebase Modular SDK Import Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+<div id="root"></div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBz1d6Zehv5y2Jvqbhv9Y3C1gEhrcEkL0I",
-      authDomain: "totot-restaurant-15a8c.firebaseapp.com",
-      projectId: "totot-restaurant-15a8c",
-      storageBucket: "totot-restaurant-15a8c.firebasestorage.app",
-      messagingSenderId: "470989846823",
-      appId: "1:470989846823:web:08ef90ac279a66a65d5102",
-      measurementId: "G-JPPX9B2ST7",
-      databaseURL: "https://totot-restaurant-15a8c-default-rtdb.firebaseio.com"
-    };
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+// --- Firebase Config & Initialization ---
+const firebaseConfig = {
+  apiKey: "AIzaSyBz1d6Zehv5y2Jvqbhv9Y3C1gEhrcEkL0I",
+  authDomain: "totot-restaurant-15a8c.firebaseapp.com",
+  projectId: "totot-restaurant-15a8c",
+  storageBucket: "totot-restaurant-15a8c.firebasestorage.app",
+  messagingSenderId: "470989846823",
+  appId: "1:470989846823:web:08ef90ac279a66a65d5102",
+  measurementId: "G-JPPX9B2ST7"
+};
 
-    window.FirebaseBridge = {
-      db,
-      ref,
-      onValue,
-      set,
-      push,
-      remove,
-      update
-    };
-  </script>
+let db = null;
+try {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  db = firebase.firestore();
+} catch (e) {
+  console.warn("Firebase initialization warning:", e);
+}
 
-  <!-- Complete Application Script -->
-  <script type="text/babel">
-    const { useState, useEffect, useMemo, useCallback } = React;
+// --- Initial Seed Data ---
+const INITIAL_MENU = [
+  { id: '1', name: 'Totot Special Kitfo', description: 'Finely minced beef with seasoned butter, mitmita, served with ayib and gomen.', price: 520, category: 'specialties', image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg', available: true, isFeatured: true, prepTimeMinutes: 15 },
+  { id: '2', name: 'Kitfo Leb-Leb (Lightly Warmed)', description: 'Tender beef slightly warmed in spiced clarified butter with korarima.', price: 480, category: 'specialties', image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg', available: true, isFeatured: false, prepTimeMinutes: 12 },
+  { id: '3', name: 'Gored Gored', description: 'Lean cubed beef tossed in warm awaze and herb-infused butter.', price: 490, category: 'specialties', image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg', available: true, isFeatured: false, prepTimeMinutes: 10 },
+  { id: '4', name: 'Dulet Special', description: 'Finely diced tripe, liver, and lean beef sautéed with onion and peppers.', price: 410, category: 'specialties', image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg', available: true, isFeatured: false, prepTimeMinutes: 18 },
+  { id: '5', name: 'Gomen Besiga', description: 'Collard greens slow-braised with prime beef cuts and garlic.', price: 380, category: 'specialties', image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/Gomen_besiga.jpg', available: true, isFeatured: false, prepTimeMinutes: 20 },
+  { id: '6', name: 'Fresh Ayib with Mitmita', description: 'House-made Ethiopian herbal cottage cheese.', price: 120, category: 'sides', image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg', available: true, isFeatured: false, prepTimeMinutes: 5 },
+  { id: '7', name: 'Warm Kocho Flatbread', description: 'Freshly baked enset bread, crispy outside with deep aroma.', price: 80, category: 'sides', image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg', available: true, isFeatured: false, prepTimeMinutes: 5 },
+  { id: '8', name: 'Jebena Coffee Ceremony', description: 'Clay pot roasted organic Yirgacheffe coffee served table-side.', price: 250, category: 'drinks', image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg', available: true, isFeatured: true, prepTimeMinutes: 15 },
+  { id: '9', name: 'Artisanal Tej (Honey Wine)', description: 'Traditional honey wine fermented in-house with gesho.', price: 190, category: 'drinks', image: 'https://raw.githubusercontent.com/Tototkitfo/Totot-kitfo/main/caption.jpg', available: true, isFeatured: false, prepTimeMinutes: 5 }
+];
 
-    /* --- Mock Data Initial Seeds --- */
-    const SEED_MENU_ITEMS = [
-      {
-        id: 'item-101',
-        name: 'Special Kitfo Leb Leb',
-        category: 'specialties',
-        price: 550,
-        cost: 220,
-        stock: 45,
-        unit: 'servings',
-        description: 'Prime minced beef seasoned with authentic mitmita and clarified butter (niter kibbeh), served lightly warmed.',
-        available: true,
-        preparationTime: 12,
-        spicyLevel: 'High'
-      },
-      {
-        id: 'item-102',
-        name: 'Totot Combination Platter',
-        category: 'specialties',
-        price: 890,
-        cost: 380,
-        stock: 30,
-        unit: 'platters',
-        description: 'Generous combination of Kitfo, Ayib, Gomen, and Dereq Tibs served on fresh Injera.',
-        available: true,
-        preparationTime: 20,
-        spicyLevel: 'Medium'
-      },
-      {
-        id: 'item-103',
-        name: 'Gomen Besiga',
-        category: 'specialties',
-        price: 480,
-        cost: 190,
-        stock: 25,
-        unit: 'servings',
-        description: 'Collard greens cooked with tender cuts of beef, garlic, ginger, and Ethiopian spices.',
-        available: true,
-        preparationTime: 15,
-        spicyLevel: 'Mild'
-      },
-      {
-        id: 'item-104',
-        name: 'Fresh Cottage Ayib',
-        category: 'sides',
-        price: 150,
-        cost: 40,
-        stock: 100,
-        unit: 'bowls',
-        description: 'House-made traditional Ethiopian cottage cheese, cooling and mild.',
-        available: true,
-        preparationTime: 5,
-        spicyLevel: 'None'
-      },
-      {
-        id: 'item-105',
-        name: 'Seasoned Gomen',
-        category: 'sides',
-        price: 140,
-        cost: 35,
-        stock: 80,
-        unit: 'portions',
-        description: 'Fresh collard greens steamed with kibbeh, garlic, and green chili.',
-        available: true,
-        preparationTime: 8,
-        spicyLevel: 'Mild'
-      },
-      {
-        id: 'item-106',
-        name: 'Ethiopian Gourmet Coffee Ceremony',
-        category: 'drinks',
-        price: 300,
-        cost: 60,
-        stock: 200,
-        unit: 'pots',
-        description: 'Freshly roasted Yirgacheffe coffee beans brewed in a traditional Jebena at your table.',
-        available: true,
-        preparationTime: 25,
-        spicyLevel: 'None'
-      },
-      {
-        id: 'item-107',
-        name: 'Tej Honey Wine (Bottle)',
-        category: 'drinks',
-        price: 650,
-        cost: 200,
-        stock: 50,
-        unit: 'bottles',
-        description: 'Authentic fermented honey wine crafted with Gesho leaves.',
-        available: true,
-        preparationTime: 3,
-        spicyLevel: 'None'
+const INITIAL_RESERVATIONS = [
+  { id: 'res-101', customerName: 'Dr. Yohannes Berhane', contactPhone: '+251 91 123 4567', partySize: 6, date: '2026-08-26', time: '19:30', status: 'Confirmed', isVIP: true, isCorporate: true, specialRequests: 'Mesob table by the Jebena coffee setup, mild spice.', createdAt: new Date().toISOString() },
+  { id: 'res-102', customerName: 'Sara Mengistu', contactPhone: '+251 92 884 9102', partySize: 4, date: '2026-08-26', time: '20:00', status: 'Pending', isVIP: false, isCorporate: false, specialRequests: 'Birthday celebration, extra kocho.', createdAt: new Date().toISOString() },
+  { id: 'res-103', customerName: 'Abebe Tadesse', contactPhone: '+251 93 450 1199', partySize: 2, date: '2026-08-26', time: '18:45', status: 'Confirmed', isVIP: false, isCorporate: false, specialRequests: 'Leb-leb kitfo preferred.', createdAt: new Date().toISOString() },
+  { id: 'res-104', customerName: 'Hilton Addis Delegation', contactPhone: '+251 11 517 0000', partySize: 12, date: '2026-08-27', time: '13:00', status: 'Confirmed', isVIP: true, isCorporate: true, specialRequests: 'Full VIP Mesob hall booking with coffee ritual.', createdAt: new Date().toISOString() }
+];
+
+const INITIAL_SETTINGS = {
+  brandName: 'Totot Cultural Restaurant',
+  locationTag: 'Gerji, Addis Ababa',
+  address: '2R54+2W4, Gerji Imperial Street, Bole Sub-City, Addis Ababa, Ethiopia',
+  phone: '+251 11 646 0718',
+  email: 'concierge@tototrestaurant.com',
+  openTime: '08:00',
+  closeTime: '23:30',
+  hoursType: '24hours',
+  headline: 'Authentic Gurage Dining & Kitfo Craft'
+};
+
+// --- Main App Component ---
+function App() {
+  const [currentTab, setCurrentTab] = useState('dashboard');
+  const [menuItems, setMenuItems] = useState(INITIAL_MENU);
+  const [reservations, setReservations] = useState(INITIAL_RESERVATIONS);
+  const [settings, setSettings] = useState(INITIAL_SETTINGS);
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // Modals
+  const [newResOpen, setNewResOpen] = useState(false);
+  const [menuModalOpen, setMenuModalOpen] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+  const [resDetails, setResDetails] = useState(null);
+  const [firebaseModalOpen, setFirebaseModalOpen] = useState(false);
+
+  // Real-time Firestore Listeners
+  useEffect(() => {
+    if (!db) return;
+
+    // Listen to reservations from Firestore
+    const unsubRes = db.collection('reservations').onSnapshot(snap => {
+      if (!snap.empty) {
+        const list = [];
+        snap.forEach(doc => {
+          const d = doc.data();
+          list.push({
+            id: doc.id,
+            customerName: d.customerName || d.name || 'Guest',
+            contactPhone: d.contactPhone || d.phone || '',
+            partySize: Number(d.partySize || d.guests || 2),
+            date: d.date || '',
+            time: d.time || '',
+            status: d.status || 'Pending',
+            isVIP: !!d.isVIP,
+            isCorporate: !!d.isCorporate,
+            specialRequests: d.specialRequests || '',
+            createdAt: d.createdAt || new Date().toISOString()
+          });
+        });
+        setReservations(list);
       }
-    ];
+    });
 
-    const SEED_ORDERS = [
-      {
-        id: 'ord-901',
-        customerName: 'Abebe Bikila',
-        tableNumber: 'Table 04',
-        items: [
-          { name: 'Special Kitfo Leb Leb', quantity: 2, price: 550 },
-          { name: 'Fresh Cottage Ayib', quantity: 1, price: 150 }
-        ],
-        totalAmount: 1250,
-        status: 'Preparing',
-        timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
-        paymentType: 'Cash'
-      },
-      {
-        id: 'ord-902',
-        customerName: 'Sara Tadesse',
-        tableNumber: 'Table 12',
-        items: [
-          { name: 'Totot Combination Platter', quantity: 1, price: 890 },
-          { name: 'Tej Honey Wine (Bottle)', quantity: 1, price: 650 }
-        ],
-        totalAmount: 1540,
-        status: 'Completed',
-        timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-        paymentType: 'Digital'
-      },
-      {
-        id: 'ord-903',
-        customerName: 'Yonas Kebede',
-        tableNumber: 'Takeout',
-        items: [
-          { name: 'Gomen Besiga', quantity: 1, price: 480 }
-        ],
-        totalAmount: 480,
-        status: 'Pending',
-        timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
-        paymentType: 'Cash'
+    // Listen to menu items from Firestore
+    const unsubMenu = db.collection('menu_items').onSnapshot(snap => {
+      if (!snap.empty) {
+        const list = [];
+        snap.forEach(doc => {
+          list.push({ id: doc.id, ...doc.data() });
+        });
+        setMenuItems(list);
       }
-    ];
+    });
 
-    /* --- Sub-Component 1: Top Navigation Bar --- */
-    const Navbar = ({ activeTab, setActiveTab, isConnected, pendingOrdersCount }) => {
-      return (
-        <header className="bg-[#1A1A1A] text-[#FDFCF5] sticky top-0 z-50 border-b border-[#1A1A1A]/30 shadow-md">
-          <div className="cms-container py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined text-4xl text-[#C5A059]">restaurant_menu</span>
-              <div>
-                <h1 className="font-serif italic text-2xl font-bold tracking-wide">Totot Kitfo CMS</h1>
-                <p className="text-xs text-[#FDFCF5]/60 tracking-wider uppercase">Executive Restaurant Management System</p>
-              </div>
+    return () => {
+      unsubRes();
+      unsubMenu();
+    };
+  }, []);
+
+  // Handlers
+  const handleCreateReservation = async (data) => {
+    const newRes = {
+      ...data,
+      id: `res-${Date.now()}`,
+      status: 'Confirmed',
+      createdAt: new Date().toISOString()
+    };
+    setReservations(prev => [newRes, ...prev]);
+    if (db) {
+      try {
+        await db.collection('reservations').add(newRes);
+      } catch (e) { console.error(e); }
+    }
+    setNewResOpen(false);
+  };
+
+  const handleUpdateStatus = async (id, status) => {
+    setReservations(prev => prev.map(r => r.id === id ? { ...r, status } : r));
+    if (db) {
+      try {
+        await db.collection('reservations').doc(id).update({ status });
+      } catch (e) { console.error(e); }
+    }
+  };
+
+  const handleDeleteReservation = async (id) => {
+    setReservations(prev => prev.filter(r => r.id !== id));
+    if (db) {
+      try {
+        await db.collection('reservations').doc(id).delete();
+      } catch (e) { console.error(e); }
+    }
+    setResDetails(null);
+  };
+
+  const handleSaveMenuItem = async (item) => {
+    if (editItem) {
+      const updated = { ...editItem, ...item };
+      setMenuItems(prev => prev.map(m => m.id === editItem.id ? updated : m));
+      if (db) await db.collection('menu_items').doc(editItem.id).set(updated, { merge: true });
+    } else {
+      const created = { ...item, id: `item-${Date.now()}` };
+      setMenuItems(prev => [created, ...prev]);
+      if (db) await db.collection('menu_items').doc(created.id).set(created);
+    }
+    setMenuModalOpen(false);
+    setEditItem(null);
+  };
+
+  const handleToggleMenuAvail = async (id) => {
+    const item = menuItems.find(m => m.id === id);
+    if (!item) return;
+    const updated = { ...item, available: !item.available };
+    setMenuItems(prev => prev.map(m => m.id === id ? updated : m));
+    if (db) await db.collection('menu_items').doc(id).set(updated, { merge: true });
+  };
+
+  const handleDeleteMenuItem = async (id) => {
+    if (!confirm('Remove this dish from menu?')) return;
+    setMenuItems(prev => prev.filter(m => m.id !== id));
+    if (db) await db.collection('menu_items').doc(id).delete();
+  };
+
+  // Metrics
+  const confirmedCount = reservations.filter(r => r.status === 'Confirmed').length;
+  const pendingCount = reservations.filter(r => r.status === 'Pending').length;
+  const totalCovers = reservations.filter(r => r.status === 'Confirmed').reduce((acc, r) => acc + r.partySize, 0);
+
+  return (
+    <div className="flex h-screen w-screen overflow-hidden bg-[#FDFCF5] text-[#1A1A1A]">
+      {/* SIDEBAR */}
+      <aside className="w-64 border-r border-[#1A1A1A]/10 bg-[#FAF8F0] flex flex-col justify-between p-4 shrink-0">
+        <div>
+          {/* Logo */}
+          <div className="px-3 py-3 border-b border-[#1A1A1A]/10 mb-4 flex items-center justify-between">
+            <div>
+              <div className="text-[9px] font-bold tracking-[0.25em] uppercase text-[#1A1A1A]/50">Console</div>
+              <h1 className="font-serif italic text-[22px] font-normal text-[#1A1A1A]">Totot Cultural</h1>
             </div>
+            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+          </div>
 
-            {/* Navigation Tabs */}
-            <nav className="flex items-center gap-2 bg-[#2A2A2A] p-1.5 rounded-lg border border-[#C5A059]/20">
+          {/* Navigation */}
+          <nav className="space-y-1">
+            {[
+              { id: 'dashboard', label: 'Overview', icon: '📊' },
+              { id: 'reservations', label: 'Reservations', icon: '📅', badge: pendingCount },
+              { id: 'menu', label: 'Menu CMS', icon: '🍲' },
+              { id: 'analytics', label: 'Analytics', icon: '📈' },
+              { id: 'settings', label: 'Settings & Bridge', icon: '⚙️' }
+            ].map(tab => (
               <button
-                onClick={() => setActiveTab('menu')}
-                className={`px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-                  activeTab === 'menu' ? 'bg-[#C5A059] text-[#1A1A1A] shadow' : 'text-[#FDFCF5]/70 hover:text-white'
+                key={tab.id}
+                onClick={() => setCurrentTab(tab.id)}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-md text-[12px] font-bold uppercase tracking-wider transition-all ${
+                  currentTab === tab.id
+                    ? 'bg-[#1A1A1A] text-[#FDFCF5] shadow-sm'
+                    : 'text-[#1A1A1A]/70 hover:bg-[#EFECE5] hover:text-[#1A1A1A]'
                 }`}
               >
-                <span className="material-symbols-outlined text-sm">menu_book</span>
-                Menu Management
-              </button>
-
-              <button
-                onClick={() => setActiveTab('orders')}
-                className={`px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 relative ${
-                  activeTab === 'orders' ? 'bg-[#C5A059] text-[#1A1A1A] shadow' : 'text-[#FDFCF5]/70 hover:text-white'
-                }`}
-              >
-                <span className="material-symbols-outlined text-sm">receipt_long</span>
-                Live Orders
-                {pendingOrdersCount > 0 && (
-                  <span className="ml-1 bg-rose-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                    {pendingOrdersCount}
+                <div className="flex items-center gap-2.5">
+                  <span>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </div>
+                {tab.badge > 0 && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-200 text-amber-900">
+                    {tab.badge}
                   </span>
                 )}
               </button>
+            ))}
+          </nav>
+        </div>
 
-              <button
-                onClick={() => setActiveTab('analytics')}
-                className={`px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-                  activeTab === 'analytics' ? 'bg-[#C5A059] text-[#1A1A1A] shadow' : 'text-[#FDFCF5]/70 hover:text-white'
-                }`}
-              >
-                <span className="material-symbols-outlined text-sm">analytics</span>
-                Analytics Hub
-              </button>
-            </nav>
+        {/* Sidebar Footer */}
+        <div className="space-y-2 pt-4 border-t border-[#1A1A1A]/10">
+          <button
+            onClick={() => setNewResOpen(true)}
+            className="w-full py-2.5 bg-[#1A1A1A] text-[#FDFCF5] hover:bg-[#333333] rounded-md text-[11px] font-bold tracking-[0.2em] uppercase transition-all shadow-sm flex items-center justify-center gap-2"
+          >
+            <span>+</span>
+            <span>New Booking</span>
+          </button>
 
-            {/* Realtime Status Indicator */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 bg-[#2A2A2A] px-3.5 py-1.5 rounded-full border border-[#C5A059]/20">
-                <span className={`w-2.5 h-2.5 rounded-full ${isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'}`}></span>
-                <span className="text-xs font-semibold tracking-wider uppercase text-[#FDFCF5]">
-                  {isConnected ? 'Firebase Live' : 'Offline Mode'}
-                </span>
-              </div>
+          <button
+            onClick={() => setFirebaseModalOpen(true)}
+            className="w-full py-2 px-3 rounded-md bg-[#EFECE5] border border-[#1A1A1A]/10 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]"
+          >
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              Firestore Live
+            </span>
+            <span className="font-mono text-[9px] text-[#1A1A1A]/60">Sync Active</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* MAIN VIEW CONTAINER */}
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-[#FDFCF5]">
+        {/* TOP BAR */}
+        <header className="h-16 border-b border-[#1A1A1A]/10 px-6 flex items-center justify-between bg-[#FDFCF5] shrink-0">
+          <div className="flex items-center gap-3">
+            <h2 className="font-serif italic text-[20px] capitalize text-[#1A1A1A]">
+              {currentTab === 'menu' ? 'Menu Catalogue CMS' : currentTab}
+            </h2>
+            <span className="text-[11px] font-mono text-[#1A1A1A]/50 bg-[#EFECE5] px-2 py-0.5 rounded">
+              Gerji Main Hall
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <input
+              type="text"
+              placeholder="Search bookings or dishes..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="bento-input px-3 py-1.5 rounded-md text-[12px] w-56 placeholder-[#1A1A1A]/40"
+            />
+            <div className="text-[11px] font-mono text-[#1A1A1A]/70 hidden sm:block">
+              {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
             </div>
           </div>
         </header>
-      );
-    };
 
-    /* --- Sub-Component 2: Status Category Pill --- */
-    const CategoryBadge = ({ category }) => {
-      const styles = {
-        specialties: 'badge-specialties',
-        sides: 'badge-sides',
-        drinks: 'badge-drinks'
-      };
-
-      const labels = {
-        specialties: 'Specialty',
-        sides: 'Side Dish',
-        drinks: 'Beverage'
-      };
-
-      return (
-        <span className={`text-[10px] uppercase font-extrabold tracking-wider px-2.5 py-1 rounded-full ${styles[category] || 'badge-[#EFECE5]'}`}>
-          {labels[category] || category}
-        </span>
-      );
-    };
-
-    /* --- Sub-Component 3: Form Editor Component --- */
-    const MenuItemForm = ({ form, setForm, handleSubmit, editingId, handleCancel }) => {
-      return (
-        <div className="bento-card-static p-6 sticky top-28">
-          <div className="flex items-center justify-between pb-4 mb-5 border-b border-[#1A1A1A]/10">
-            <div>
-              <h2 className="font-serif italic text-xl font-bold text-[#1A1A1A]">
-                {editingId ? 'Edit Dish Details' : 'Add New Dish'}
-              </h2>
-              <p className="text-xs text-[#1A1A1A]/60">Update catalog items for real-time customer site sync</p>
-            </div>
-            {editingId && (
-              <span className="text-xs font-bold px-2.5 py-1 bg-[#C5A059]/20 text-[#7A6438] rounded-full border border-[#C5A059]/40">
-                Edit Mode
-              </span>
-            )}
-          </div>
-
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <label className="bento-label">Dish / Item Title *</label>
-              <input 
-                type="text" 
-                required 
-                value={form.name} 
-                onChange={e => setForm({...form, name: e.target.value})} 
-                className="bento-input font-medium" 
-                placeholder="e.g. Special Kitfo Leb Leb"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="bento-label">Category *</label>
-                <select 
-                  value={form.category} 
-                  onChange={e => setForm({...form, category: e.target.value})}
-                  className="bento-input font-medium bg-white cursor-pointer"
-                >
-                  <option value="specialties">Specialties</option>
-                  <option value="sides">Sides & Appetizers</option>
-                  <option value="drinks">Drinks & Coffee</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="bento-label">Spicy Level</label>
-                <select 
-                  value={form.spicyLevel || 'Mild'} 
-                  onChange={e => setForm({...form, spicyLevel: e.target.value})}
-                  className="bento-input font-medium bg-white cursor-pointer"
-                >
-                  <option value="None">None</option>
-                  <option value="Mild">Mild</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High (Mitmita)</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="bento-label">Selling Price (ETB) *</label>
-                <input 
-                  type="number" 
-                  required 
-                  min="0"
-                  value={form.price} 
-                  onChange={e => setForm({...form, price: e.target.value})} 
-                  className="bento-input font-medium" 
-                  placeholder="e.g. 550"
-                />
-              </div>
-
-              <div>
-                <label className="bento-label">Unit Cost (ETB)</label>
-                <input 
-                  type="number" 
-                  min="0"
-                  value={form.cost || ''} 
-                  onChange={e => setForm({...form, cost: e.target.value})} 
-                  className="bento-input font-medium" 
-                  placeholder="e.g. 220"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="bento-label">Available Stock</label>
-                <input 
-                  type="number" 
-                  min="0"
-                  value={form.stock || ''} 
-                  onChange={e => setForm({...form, stock: e.target.value})} 
-                  className="bento-input font-medium" 
-                  placeholder="e.g. 50"
-                />
-              </div>
-
-              <div>
-                <label className="bento-label">Prep Time (Mins)</label>
-                <input 
-                  type="number" 
-                  min="1"
-                  value={form.preparationTime || ''} 
-                  onChange={e => setForm({...form, preparationTime: e.target.value})} 
-                  className="bento-input font-medium" 
-                  placeholder="e.g. 15"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="bento-label">Recipe & Ingredients Description</label>
-              <textarea 
-                rows="3" 
-                value={form.description} 
-                onChange={e => setForm({...form, description: e.target.value})} 
-                className="bento-input font-medium resize-none" 
-                placeholder="Detailed description for public menu page..."
-              />
-            </div>
-
-            <div className="flex items-center gap-3 p-3 bg-[#FDFCF5] rounded border border-[#1A1A1A]/10">
-              <input 
-                type="checkbox" 
-                id="availableToggle" 
-                checked={form.available} 
-                onChange={e => setForm({...form, available: e.target.checked})}
-                className="w-4 h-4 accent-[#1A1A1A] cursor-pointer"
-              />
-              <label htmlFor="availableToggle" className="text-xs font-semibold cursor-pointer select-none">
-                Visible on Customer Order Website
-              </label>
-            </div>
-
-            <div className="flex items-center gap-3 pt-2">
-              <button type="submit" className="btn-primary flex-1">
-                <span className="material-symbols-outlined text-base">{editingId ? 'save' : 'add_circle'}</span>
-                {editingId ? 'Save Changes' : 'Create Item'}
-              </button>
-              
-              {editingId && (
-                <button type="button" onClick={handleCancel} className="btn-secondary">
-                  Cancel
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
-      );
-    };
-
-    /* --- Sub-Component 4: Individual Item Display Card --- */
-    const ItemCard = ({ item, handleEdit, handleDelete, toggleVisibility }) => {
-      const margin = useMemo(() => {
-        if (!item.price || !item.cost) return null;
-        const profit = item.price - item.cost;
-        const marginPct = ((profit / item.price) * 100).toFixed(0);
-        return { profit, marginPct };
-      }, [item.price, item.cost]);
-
-      return (
-        <div className={`bento-card p-5 transition-all ${!item.available ? 'bg-gray-50/70 opacity-75' : ''}`}>
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 flex-wrap mb-1">
-                <h3 className="font-serif font-bold text-lg text-[#1A1A1A]">{item.name}</h3>
-                <CategoryBadge category={item.category || 'specialties'} />
-                {item.spicyLevel && item.spicyLevel !== 'None' && (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">
-                    🔥 {item.spicyLevel}
-                  </span>
-                )}
-              </div>
-
-              <p className="text-xs text-[#1A1A1A]/70 leading-relaxed mb-3">
-                {item.description || 'No detailed recipe description provided.'}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-[#1A1A1A]/80 border-t border-[#1A1A1A]/5 pt-3">
-                <div className="bg-[#C5A059]/10 px-3 py-1 rounded border border-[#C5A059]/30">
-                  <span className="text-[#1A1A1A]/60 font-semibold mr-1">Price:</span>
-                  <span className="font-extrabold text-[#C5A059]">{item.price} ETB</span>
+        {/* VIEW ROUTER BODY */}
+        <main className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+          {/* 1. DASHBOARD VIEW */}
+          {currentTab === 'dashboard' && (
+            <div className="space-y-6">
+              {/* Metric Bento Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bento-card p-5 rounded-md">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/50 mb-1">Total Bookings</div>
+                  <div className="font-serif text-[28px] font-bold text-[#1A1A1A]">{reservations.length}</div>
+                  <div className="text-[11px] text-emerald-700 font-medium mt-1">✓ {confirmedCount} Confirmed</div>
                 </div>
 
-                {margin && (
-                  <div className="bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 text-emerald-800">
-                    <span className="font-semibold">Profit:</span> +{margin.profit} ETB ({margin.marginPct}%)
-                  </div>
-                )}
-
-                {item.stock !== undefined && (
-                  <div className={`px-2.5 py-1 rounded border ${item.stock < 10 ? 'bg-rose-50 border-rose-200 text-rose-700 font-bold' : 'bg-gray-100 border-gray-200 text-gray-700'}`}>
-                    <span>Stock: {item.stock} {item.unit || 'units'}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Quick Action Buttons */}
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => toggleVisibility(item)}
-                className={`p-2 rounded border transition-colors ${
-                  item.available 
-                    ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100' 
-                    : 'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100'
-                }`}
-                title={item.available ? 'Hide from Menu' : 'Show on Menu'}
-              >
-                <span className="material-symbols-outlined text-lg">
-                  {item.available ? 'visibility' : 'visibility_off'}
-                </span>
-              </button>
-
-              <button
-                onClick={() => handleEdit(item)}
-                className="p-2 rounded border border-[#1A1A1A]/15 bg-[#EFECE5] text-[#1A1A1A] hover:bg-[#E2DDD2] transition-colors"
-                title="Edit Item"
-              >
-                <span className="material-symbols-outlined text-lg">edit</span>
-              </button>
-
-              <button
-                onClick={() => handleDelete(item.id)}
-                className="p-2 rounded border border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors"
-                title="Delete Item"
-              >
-                <span className="material-symbols-outlined text-lg">delete</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    /* --- Sub-Component 5: Live Orders View --- */
-    const OrdersManager = ({ orders, updateOrderStatus }) => {
-      const [statusFilter, setStatusFilter] = useState('all');
-
-      const filteredOrders = useMemo(() => {
-        if (statusFilter === 'all') return orders;
-        return orders.filter(o => o.status.toLowerCase() === statusFilter.toLowerCase());
-      }, [orders, statusFilter]);
-
-      return (
-        <div className="flex flex-col gap-6">
-          <div className="bento-card-static p-6 flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 className="font-serif italic text-2xl font-bold text-[#1A1A1A]">Incoming Table & Takeout Orders</h2>
-              <p className="text-xs text-[#1A1A1A]/60">Real-time point of sale kitchen orders feed</p>
-            </div>
-
-            {/* Order Status Filters */}
-            <div className="flex gap-2 bg-[#EFECE5] p-1.5 rounded-lg border border-[#1A1A1A]/10">
-              {['all', 'pending', 'preparing', 'completed'].map(st => (
-                <button
-                  key={st}
-                  onClick={() => setStatusFilter(st)}
-                  className={`px-3 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-all ${
-                    statusFilter === st ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#1A1A1A]/60 hover:text-[#1A1A1A]'
-                  }`}
-                >
-                  {st}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredOrders.map(ord => (
-              <div key={ord.id} className="bento-card p-6 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between border-b border-[#1A1A1A]/10 pb-3 mb-3">
-                    <div>
-                      <span className="text-xs font-extrabold text-[#C5A059] uppercase tracking-wider">{ord.tableNumber}</span>
-                      <h3 className="font-serif font-bold text-lg text-[#1A1A1A]">{ord.customerName}</h3>
-                    </div>
-                    <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${
-                      ord.status === 'Completed' ? 'bg-emerald-100 text-emerald-800' :
-                      ord.status === 'Preparing' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'
-                    }`}>
-                      {ord.status}
-                    </span>
-                  </div>
-
-                  {/* Order Items List */}
-                  <div className="flex flex-col gap-2 mb-4">
-                    {ord.items.map((it, idx) => (
-                      <div key={idx} className="flex justify-between text-sm font-medium">
-                        <span>{it.quantity}x {it.name}</span>
-                        <span className="font-bold">{it.price * it.quantity} ETB</span>
-                      </div>
-                    ))}
-                  </div>
+                <div className="bento-card p-5 rounded-md">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/50 mb-1">Expected Covers</div>
+                  <div className="font-serif text-[28px] font-bold text-[#1A1A1A]">{totalCovers} <span className="text-[14px] font-sans font-normal text-[#1A1A1A]/60">Guests</span></div>
+                  <div className="text-[11px] text-[#1A1A1A]/70 font-medium mt-1">Daily Mesob Capacity</div>
                 </div>
 
-                <div className="border-t border-[#1A1A1A]/10 pt-3 flex items-center justify-between">
+                <div className="bento-card p-5 rounded-md">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/50 mb-1">Pending Inquiries</div>
+                  <div className="font-serif text-[28px] font-bold text-amber-800">{pendingCount}</div>
+                  <div className="text-[11px] text-amber-800/80 font-medium mt-1">Requires Confirmation</div>
+                </div>
+
+                <div className="bento-card p-5 rounded-md">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1A1A1A]/50 mb-1">Menu Offerings</div>
+                  <div className="font-serif text-[28px] font-bold text-[#1A1A1A]">{menuItems.length} <span className="text-[14px] font-sans font-normal text-[#1A1A1A]/60">Dishes</span></div>
+                  <div className="text-[11px] text-[#1A1A1A]/70 font-medium mt-1">Real-time Synced</div>
+                </div>
+              </div>
+
+              {/* Recent Bookings Table */}
+              <div className="bento-card p-6 rounded-md">
+                <div className="flex items-center justify-between mb-4 border-b border-[#1A1A1A]/10 pb-3">
                   <div>
-                    <span className="text-xs text-[#1A1A1A]/50 block">Total Bill ({ord.paymentType})</span>
-                    <span className="text-lg font-extrabold text-[#1A1A1A]">{ord.totalAmount} ETB</span>
+                    <h3 className="font-serif italic text-[18px] text-[#1A1A1A]">Recent Dining Bookings</h3>
+                    <p className="text-[11px] text-[#1A1A1A]/60">Live feed from both this console and your consumer website</p>
                   </div>
+                  <button
+                    onClick={() => setCurrentTab('reservations')}
+                    className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A1A] hover:underline"
+                  >
+                    View All →
+                  </button>
+                </div>
 
-                  <div className="flex items-center gap-2">
-                    {ord.status === 'Pending' && (
-                      <button 
-                        onClick={() => updateOrderStatus(ord.id, 'Preparing')}
-                        className="btn-primary text-xs py-2 px-3"
-                      >
-                        Start Preparing
-                      </button>
-                    )}
-                    {ord.status === 'Preparing' && (
-                      <button 
-                        onClick={() => updateOrderStatus(ord.id, 'Completed')}
-                        className="bg-emerald-700 text-white font-bold text-xs py-2 px-3 rounded hover:bg-emerald-800 transition-colors"
-                      >
-                        Mark Completed
-                      </button>
-                    )}
-                  </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-[13px]">
+                    <thead>
+                      <tr className="border-b border-[#1A1A1A]/10 text-[10px] uppercase tracking-wider text-[#1A1A1A]/50">
+                        <th className="py-2.5">Guest</th>
+                        <th className="py-2.5">Party</th>
+                        <th className="py-2.5">Date & Time</th>
+                        <th className="py-2.5">Status</th>
+                        <th className="py-2.5 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#1A1A1A]/5">
+                      {reservations.slice(0, 5).map(res => (
+                        <tr key={res.id} className="hover:bg-[#FFFFFF]/60 transition-colors">
+                          <td className="py-3 font-bold text-[#1A1A1A]">
+                            <div className="flex items-center gap-2">
+                              <span>{res.customerName}</span>
+                              {res.isVIP && <span className="px-1.5 py-0.2 rounded text-[9px] bg-[#1A1A1A] text-[#FDFCF5] font-bold">VIP</span>}
+                            </div>
+                            <div className="text-[11px] text-[#1A1A1A]/60 font-mono font-normal">{res.contactPhone}</div>
+                          </td>
+                          <td className="py-3">{res.partySize} Guests</td>
+                          <td className="py-3 font-mono text-[12px]">{res.date} • {res.time}</td>
+                          <td className="py-3">
+                            <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
+                              res.status === 'Confirmed' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' :
+                              res.status === 'Pending' ? 'bg-amber-50 text-amber-800 border-amber-300' :
+                              res.status === 'Completed' ? 'bg-[#1A1A1A] text-[#FDFCF5] border-[#1A1A1A]' :
+                              'bg-red-50 text-red-800 border-red-300'
+                            }`}>
+                              {res.status}
+                            </span>
+                          </td>
+                          <td className="py-3 text-right">
+                            <button
+                              onClick={() => setResDetails(res)}
+                              className="px-2.5 py-1 text-[11px] font-bold border border-[#1A1A1A]/15 hover:bg-[#EFECE5] rounded"
+                            >
+                              Manage
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      );
-    };
-
-    /* --- Sub-Component 6: Analytics & Revenue Dashboard --- */
-    const AnalyticsDashboard = ({ menuItems, orders }) => {
-      const metrics = useMemo(() => {
-        const totalRevenue = orders.reduce((acc, o) => acc + o.totalAmount, 0);
-        const totalItemsSold = orders.reduce((acc, o) => acc + o.items.reduce((iAcc, i) => iAcc + i.quantity, 0), 0);
-        const avgOrderValue = orders.length ? (totalRevenue / orders.length).toFixed(0) : 0;
-        const totalInventoryValue = menuItems.reduce((acc, i) => acc + ((i.stock || 0) * (i.price || 0)), 0);
-
-        return { totalRevenue, totalItemsSold, avgOrderValue, totalInventoryValue };
-      }, [menuItems, orders]);
-
-      return (
-        <div className="flex flex-col gap-6">
-          <div className="bento-card-static p-6">
-            <h2 className="font-serif italic text-2xl font-bold text-[#1A1A1A]">Executive Financial Overview</h2>
-            <p className="text-xs text-[#1A1A1A]/60">Real-time performance indicators & inventory valuation</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bento-card p-5">
-              <span className="material-symbols-outlined text-3xl text-[#C5A059] mb-2">payments</span>
-              <span className="bento-label">Gross Revenue</span>
-              <h3 className="text-2xl font-extrabold text-[#1A1A1A]">{metrics.totalRevenue.toLocaleString()} ETB</h3>
-              <span className="text-[11px] text-emerald-700 font-semibold mt-1 inline-block">↑ 14% vs last week</span>
             </div>
+          )}
 
-            <div className="bento-card p-5">
-              <span className="material-symbols-outlined text-3xl text-emerald-700 mb-2">shopping_bag</span>
-              <span className="bento-label">Total Items Sold</span>
-              <h3 className="text-2xl font-extrabold text-[#1A1A1A]">{metrics.totalItemsSold}</h3>
-              <span className="text-[11px] text-emerald-700 font-semibold mt-1 inline-block">Across {orders.length} orders</span>
-            </div>
-
-            <div className="bento-card p-5">
-              <span className="material-symbols-outlined text-3xl text-blue-700 mb-2">receipt</span>
-              <span className="bento-label">Average Ticket Size</span>
-              <h3 className="text-2xl font-extrabold text-[#1A1A1A]">{metrics.avgOrderValue} ETB</h3>
-              <span className="text-[11px] text-[#1A1A1A]/60 mt-1 inline-block">Per table receipt</span>
-            </div>
-
-            <div className="bento-card p-5">
-              <span className="material-symbols-outlined text-3xl text-purple-700 mb-2">inventory_2</span>
-              <span className="bento-label">Stock Asset Value</span>
-              <h3 className="text-2xl font-extrabold text-[#1A1A1A]">{metrics.totalInventoryValue.toLocaleString()} ETB</h3>
-              <span className="text-[11px] text-[#1A1A1A]/60 mt-1 inline-block">{menuItems.length} menu items active</span>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
-    /* --- Root Main Component --- */
-    function AdminApp() {
-      const [activeTab, setActiveTab] = useState('menu');
-      const [menuItems, setMenuItems] = useState(SEED_MENU_ITEMS);
-      const [orders, setOrders] = useState(SEED_ORDERS);
-      const [isConnected, setIsConnected] = useState(false);
-      const [editingId, setEditingId] = useState(null);
-      const [searchTerm, setSearchTerm] = useState('');
-      const [categoryFilter, setCategoryFilter] = useState('all');
-
-      const [form, setForm] = useState({
-        name: '',
-        category: 'specialties',
-        price: '',
-        cost: '',
-        stock: '',
-        unit: 'servings',
-        description: '',
-        available: true,
-        preparationTime: '',
-        spicyLevel: 'Mild'
-      });
-
-      /* --- Firebase Live Synchronization --- */
-      useEffect(() => {
-        const checkBridge = setInterval(() => {
-          if (window.FirebaseBridge) {
-            clearInterval(checkBridge);
-            const { db, ref, onValue, set } = window.FirebaseBridge;
-            
-            // Sync Menu Items
-            const menuRef = ref(db, 'menu');
-            onValue(menuRef, (snapshot) => {
-              setIsConnected(true);
-              const data = snapshot.val();
-              if (data) {
-                const parsed = Object.entries(data).map(([key, val]) => ({ id: key, ...val }));
-                setMenuItems(parsed);
-              } else {
-                SEED_MENU_ITEMS.forEach(it => set(ref(db, 'menu/' + it.id), it));
-              }
-            }, () => setIsConnected(false));
-
-            // Sync Orders
-            const ordersRef = ref(db, 'orders');
-            onValue(ordersRef, (snapshot) => {
-              const data = snapshot.val();
-              if (data) {
-                const parsedOrders = Object.entries(data).map(([key, val]) => ({ id: key, ...val }));
-                setOrders(parsedOrders);
-              }
-            });
-          }
-        }, 150);
-
-        return () => clearInterval(checkBridge);
-      }, []);
-
-      /* --- Form Actions --- */
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        
-        const payload = {
-          name: form.name,
-          category: form.category,
-          price: Number(form.price),
-          cost: Number(form.cost) || 0,
-          stock: Number(form.stock) || 0,
-          unit: form.unit || 'servings',
-          description: form.description,
-          available: Boolean(form.available),
-          preparationTime: Number(form.preparationTime) || 10,
-          spicyLevel: form.spicyLevel || 'Mild'
-        };
-
-        if (window.FirebaseBridge) {
-          const { db, ref, set, push } = window.FirebaseBridge;
-          if (editingId) {
-            set(ref(db, 'menu/' + editingId), payload);
-            setEditingId(null);
-          } else {
-            const newRef = push(ref(db, 'menu'));
-            set(newRef, payload);
-          }
-        } else {
-          // Local fallback
-          if (editingId) {
-            setMenuItems(prev => prev.map(i => i.id === editingId ? { ...payload, id: editingId } : i));
-            setEditingId(null);
-          } else {
-            setMenuItems(prev => [...prev, { ...payload, id: 'item-' + Date.now() }]);
-          }
-        }
-
-        handleCancel();
-      };
-
-      const handleEdit = (item) => {
-        setEditingId(item.id);
-        setForm({
-          name: item.name || '',
-          category: item.category || 'specialties',
-          price: item.price || '',
-          cost: item.cost || '',
-          stock: item.stock || '',
-          unit: item.unit || 'servings',
-          description: item.description || '',
-          available: item.available !== false,
-          preparationTime: item.preparationTime || '',
-          spicyLevel: item.spicyLevel || 'Mild'
-        });
-      };
-
-      const handleDelete = (id) => {
-        if (confirm('Are you sure you want to delete this dish from the menu?')) {
-          if (window.FirebaseBridge) {
-            const { db, ref, remove } = window.FirebaseBridge;
-            remove(ref(db, 'menu/' + id));
-          } else {
-            setMenuItems(prev => prev.filter(i => i.id !== id));
-          }
-          if (editingId === id) handleCancel();
-        }
-      };
-
-      const toggleVisibility = (item) => {
-        const updatedStatus = !item.available;
-        if (window.FirebaseBridge) {
-          const { db, ref, update } = window.FirebaseBridge;
-          update(ref(db, 'menu/' + item.id), { available: updatedStatus });
-        } else {
-          setMenuItems(prev => prev.map(i => i.id === item.id ? { ...i, available: updatedStatus } : i));
-        }
-      };
-
-      const updateOrderStatus = (orderId, newStatus) => {
-        if (window.FirebaseBridge) {
-          const { db, ref, update } = window.FirebaseBridge;
-          update(ref(db, 'orders/' + orderId), { status: newStatus });
-        } else {
-          setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
-        }
-      };
-
-      const handleCancel = () => {
-        setEditingId(null);
-        setForm({
-          name: '',
-          category: 'specialties',
-          price: '',
-          cost: '',
-          stock: '',
-          unit: 'servings',
-          description: '',
-          available: true,
-          preparationTime: '',
-          spicyLevel: 'Mild'
-        });
-      };
-
-      const filteredMenuItems = useMemo(() => {
-        return menuItems.filter(item => {
-          const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                               (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()));
-          const matchesCat = categoryFilter === 'all' || item.category === categoryFilter;
-          return matchesSearch && matchesCat;
-        });
-      }, [menuItems, searchTerm, categoryFilter]);
-
-      const pendingOrdersCount = useMemo(() => orders.filter(o => o.status === 'Pending').length, [orders]);
-
-      return (
-        <div className="min-h-screen flex flex-col bg-[#FDFCF5]">
-          <Navbar 
-            activeTab={activeTab} 
-            setActiveTab={setActiveTab} 
-            isConnected={isConnected} 
-            pendingOrdersCount={pendingOrdersCount} 
-          />
-
-          <main className="cms-container py-8 flex-1">
-            {activeTab === 'menu' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                {/* Form Column */}
-                <div className="lg:col-span-5">
-                  <MenuItemForm 
-                    form={form} 
-                    setForm={setForm} 
-                    handleSubmit={handleSubmit} 
-                    editingId={editingId} 
-                    handleCancel={handleCancel} 
-                  />
+          {/* 2. RESERVATIONS VIEW */}
+          {currentTab === 'reservations' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-serif italic text-[22px] text-[#1A1A1A]">Table & Mesob Reservations</h3>
+                  <p className="text-[12px] text-[#1A1A1A]/60">Manage guest lists, party sizes, and dining statuses</p>
                 </div>
+                <button
+                  onClick={() => setNewResOpen(true)}
+                  className="px-4 py-2 bg-[#1A1A1A] text-[#FDFCF5] hover:bg-[#333333] rounded-md text-[11px] font-bold tracking-[0.2em] uppercase transition-all shadow-sm"
+                >
+                  + Add Reservation
+                </button>
+              </div>
 
-                {/* Listing Column */}
-                <div className="lg:col-span-7 flex flex-col gap-5">
-                  {/* Search and Filter Controls */}
-                  <div className="bento-card-static p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="relative w-full sm:w-64">
-                      <span className="material-symbols-outlined absolute left-3 top-2.5 text-lg text-[#1A1A1A]/40">search</span>
-                      <input 
-                        type="text" 
-                        value={searchTerm} 
-                        onChange={e => setSearchTerm(e.target.value)}
-                        placeholder="Search menu items..." 
-                        className="bento-input pl-9 text-xs"
-                      />
+              <div className="bento-card rounded-md overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-[13px]">
+                    <thead>
+                      <tr className="bg-[#EFECE5]/60 border-b border-[#1A1A1A]/10 text-[10px] uppercase tracking-wider text-[#1A1A1A]/60">
+                        <th className="py-3 px-4">Patron Name</th>
+                        <th className="py-3 px-4">Contact</th>
+                        <th className="py-3 px-4">Party Size</th>
+                        <th className="py-3 px-4">Date & Time</th>
+                        <th className="py-3 px-4">Special Requests</th>
+                        <th className="py-3 px-4">Status</th>
+                        <th className="py-3 px-4 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#1A1A1A]/5">
+                      {reservations
+                        .filter(r => r.customerName.toLowerCase().includes(searchQuery.toLowerCase()) || r.contactPhone.includes(searchQuery))
+                        .map(res => (
+                          <tr key={res.id} className="hover:bg-[#FFFFFF] transition-colors">
+                            <td className="py-3 px-4 font-bold text-[#1A1A1A]">
+                              {res.customerName}
+                              {res.isVIP && <span className="ml-2 px-1.5 py-0.5 rounded text-[9px] bg-[#1A1A1A] text-[#FDFCF5] font-bold">VIP</span>}
+                            </td>
+                            <td className="py-3 px-4 font-mono text-[12px] text-[#1A1A1A]/80">{res.contactPhone}</td>
+                            <td className="py-3 px-4 font-bold">{res.partySize}</td>
+                            <td className="py-3 px-4 font-mono text-[12px]">{res.date} at {res.time}</td>
+                            <td className="py-3 px-4 text-[12px] text-[#1A1A1A]/70 max-w-xs truncate italic">
+                              "{res.specialRequests || 'None'}"
+                            </td>
+                            <td className="py-3 px-4">
+                              <select
+                                value={res.status}
+                                onChange={(e) => handleUpdateStatus(res.id, e.target.value)}
+                                className="text-[11px] font-bold uppercase rounded border border-[#1A1A1A]/20 bg-[#FFFFFF] px-2 py-1"
+                              >
+                                <option value="Confirmed">✓ Confirmed</option>
+                                <option value="Pending">⏳ Pending</option>
+                                <option value="Completed">🏁 Completed</option>
+                                <option value="Cancelled">✕ Cancelled</option>
+                              </select>
+                            </td>
+                            <td className="py-3 px-4 text-right">
+                              <button
+                                onClick={() => setResDetails(res)}
+                                className="px-3 py-1 bg-[#1A1A1A] text-[#FDFCF5] rounded text-[11px] font-bold uppercase"
+                              >
+                                View
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 3. MENU CMS VIEW */}
+          {currentTab === 'menu' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-serif italic text-[22px] text-[#1A1A1A]">Culinary Offerings & Price Management</h3>
+                  <p className="text-[12px] text-[#1A1A1A]/60">Edits update the live consumer website instantly via Firestore</p>
+                </div>
+                <button
+                  onClick={() => { setEditItem(null); setMenuModalOpen(true); }}
+                  className="px-4 py-2 bg-[#1A1A1A] text-[#FDFCF5] hover:bg-[#333333] rounded-md text-[11px] font-bold tracking-[0.2em] uppercase transition-all shadow-sm"
+                >
+                  + Add Menu Item
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {menuItems.map(item => (
+                  <div key={item.id} className="bento-card p-4 rounded-md flex flex-col justify-between shadow-2xs">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#1A1A1A]/50 bg-[#EFECE5] px-2 py-0.5 rounded">
+                          {item.category}
+                        </span>
+                        <div className="font-mono font-bold text-[15px] text-[#1A1A1A]">{item.price} ETB</div>
+                      </div>
+
+                      <h4 className="font-serif font-bold text-[17px] text-[#1A1A1A] mb-1">{item.name}</h4>
+                      <p className="text-[12px] text-[#1A1A1A]/70 leading-relaxed mb-3 line-clamp-2">{item.description}</p>
                     </div>
 
-                    <div className="flex gap-1 bg-[#EFECE5] p-1 rounded-lg w-full sm:w-auto overflow-x-auto">
-                      {['all', 'specialties', 'sides', 'drinks'].map(cat => (
-                        <button
-                          key={cat}
-                          onClick={() => setCategoryFilter(cat)}
-                          className={`px-3 py-1.5 rounded text-[11px] font-bold uppercase tracking-wider transition-all ${
-                            categoryFilter === cat ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#1A1A1A]/60 hover:text-[#1A1A1A]'
-                          }`}
-                        >
-                          {cat}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* List View */}
-                  {filteredMenuItems.length === 0 ? (
-                    <div className="bento-card-static p-12 text-center text-[#1A1A1A]/50">
-                      <span className="material-symbols-outlined text-4xl mb-2">no_meals</span>
-                      <p className="text-sm font-medium">No menu items match your search filters.</p>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col gap-3">
-                      {filteredMenuItems.map(item => (
-                        <ItemCard 
-                          key={item.id} 
-                          item={item} 
-                          handleEdit={handleEdit} 
-                          handleDelete={handleDelete} 
-                          toggleVisibility={toggleVisibility} 
+                    <div className="pt-3 border-t border-[#1A1A1A]/10 flex items-center justify-between">
+                      <label className="flex items-center gap-2 text-[11px] font-bold uppercase cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={item.available}
+                          onChange={() => handleToggleMenuAvail(item.id)}
+                          className="rounded text-[#1A1A1A]"
                         />
-                      ))}
+                        <span>{item.available ? 'Available' : 'Sold Out'}</span>
+                      </label>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => { setEditItem(item); setMenuModalOpen(true); }}
+                          className="px-2.5 py-1 text-[11px] font-bold border border-[#1A1A1A]/20 hover:bg-[#EFECE5] rounded"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteMenuItem(item.id)}
+                          className="px-2 py-1 text-[11px] font-bold text-red-700 hover:bg-red-50 rounded"
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </div>
-                  )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 4. ANALYTICS VIEW */}
+          {currentTab === 'analytics' && (
+            <div className="space-y-6">
+              <div className="bento-card p-6 rounded-md">
+                <h3 className="font-serif italic text-[20px] text-[#1A1A1A] mb-2">Dining Room Demand & Peak Hours</h3>
+                <p className="text-[12px] text-[#1A1A1A]/60 mb-6">Aggregate distribution of banquet and lunch bookings</p>
+                
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                  <div className="p-4 bg-[#FFFFFF] rounded border border-[#1A1A1A]/10">
+                    <div className="text-[10px] font-bold uppercase text-[#1A1A1A]/50">Lunch Service</div>
+                    <div className="font-serif text-[24px] font-bold text-[#1A1A1A] mt-1">35%</div>
+                  </div>
+                  <div className="p-4 bg-[#FFFFFF] rounded border border-[#1A1A1A]/10">
+                    <div className="text-[10px] font-bold uppercase text-[#1A1A1A]/50">Dinner Peak</div>
+                    <div className="font-serif text-[24px] font-bold text-[#1A1A1A] mt-1">55%</div>
+                  </div>
+                  <div className="p-4 bg-[#FFFFFF] rounded border border-[#1A1A1A]/10">
+                    <div className="text-[10px] font-bold uppercase text-[#1A1A1A]/50">Late Night / 24H</div>
+                    <div className="font-serif text-[24px] font-bold text-[#1A1A1A] mt-1">10%</div>
+                  </div>
+                  <div className="p-4 bg-[#FFFFFF] rounded border border-[#1A1A1A]/10">
+                    <div className="text-[10px] font-bold uppercase text-[#1A1A1A]/50">VIP & Corporate</div>
+                    <div className="font-serif text-[24px] font-bold text-[#1A1A1A] mt-1">42%</div>
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {activeTab === 'orders' && (
-              <OrdersManager orders={orders} updateOrderStatus={updateOrderStatus} />
-            )}
+          {/* 5. SETTINGS & BRIDGE VIEW */}
+          {currentTab === 'settings' && (
+            <div className="space-y-6 max-w-2xl">
+              <div className="bento-card p-6 rounded-md">
+                <div className="flex items-center justify-between border-b border-[#1A1A1A]/10 pb-3 mb-4">
+                  <h3 className="font-serif italic text-[20px] text-[#1A1A1A]">Firebase Cloud Database Bridge</h3>
+                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase">Connected</span>
+                </div>
+                <p className="text-[13px] text-[#1A1A1A]/70 mb-4 leading-relaxed">
+                  Both your consumer website and this management console are synced in real-time through Google Firebase Firestore.
+                </p>
+                <div className="p-3 bg-[#FFFFFF] rounded border border-[#1A1A1A]/10 font-mono text-[12px] space-y-1 mb-4">
+                  <div><strong>Project:</strong> {firebaseConfig.projectId}</div>
+                  <div><strong>Auth Domain:</strong> {firebaseConfig.authDomain}</div>
+                </div>
+                <button
+                  onClick={() => setFirebaseModalOpen(true)}
+                  className="w-full py-2 bg-[#1A1A1A] text-[#FDFCF5] hover:bg-[#333333] rounded text-[11px] font-bold uppercase tracking-wider"
+                >
+                  View Integration Details & Script
+                </button>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
 
-            {activeTab === 'analytics' && (
-              <AnalyticsDashboard menuItems={menuItems} orders={orders} />
-            )}
-          </main>
+      {/* MODAL 1: NEW RESERVATION */}
+      {newResOpen && (
+        <div className="fixed inset-0 bg-[#1A1A1A]/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-[#FDFCF5] border border-[#1A1A1A]/15 rounded-md w-full max-w-md p-6 space-y-4 shadow-xl">
+            <h3 className="font-serif italic text-[20px]">New Reservation Record</h3>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const fd = new FormData(e.target);
+              handleCreateReservation({
+                customerName: fd.get('name'),
+                contactPhone: fd.get('phone'),
+                partySize: Number(fd.get('guests')),
+                date: fd.get('date'),
+                time: fd.get('time'),
+                specialRequests: fd.get('notes'),
+                isVIP: fd.get('vip') === 'on'
+              });
+            }} className="space-y-3 text-[13px]">
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Patron Full Name</label>
+                <input required name="name" placeholder="Dr. Yohannes Berhane" className="bento-input w-full p-2 rounded" />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Contact Phone</label>
+                <input required name="phone" placeholder="+251 91 123 4567" className="bento-input w-full p-2 rounded" />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Party</label>
+                  <input required name="guests" type="number" defaultValue="2" min="1" className="bento-input w-full p-2 rounded" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Date</label>
+                  <input required name="date" type="date" defaultValue={new Date().toISOString().split('T')[0]} className="bento-input w-full p-2 rounded text-[11px]" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Time</label>
+                  <input required name="time" type="time" defaultValue="19:00" className="bento-input w-full p-2 rounded text-[11px]" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Special Requests</label>
+                <input name="notes" placeholder="e.g. Mesob table, mild spice" className="bento-input w-full p-2 rounded" />
+              </div>
+              <div className="pt-1">
+                <label className="flex items-center gap-2 text-[12px] font-bold uppercase cursor-pointer">
+                  <input type="checkbox" name="vip" />
+                  <span>VIP Guest Designation</span>
+                </label>
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-[#1A1A1A]/10">
+                <button type="button" onClick={() => setNewResOpen(false)} className="px-4 py-2 border border-[#1A1A1A]/20 rounded text-[11px] font-bold uppercase">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-[#1A1A1A] text-[#FDFCF5] rounded text-[11px] font-bold uppercase">Confirm</button>
+              </div>
+            </form>
+          </div>
         </div>
-      );
-    }
+      )}
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<AdminApp />);
-  </script>
+      {/* MODAL 2: MENU ITEM CMS */}
+      {menuModalOpen && (
+        <div className="fixed inset-0 bg-[#1A1A1A]/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-[#FDFCF5] border border-[#1A1A1A]/15 rounded-md w-full max-w-md p-6 space-y-4 shadow-xl">
+            <h3 className="font-serif italic text-[20px]">{editItem ? 'Edit Dish Offering' : 'New Dish Offering'}</h3>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const fd = new FormData(e.target);
+              handleSaveMenuItem({
+                name: fd.get('name'),
+                description: fd.get('desc'),
+                price: Number(fd.get('price')),
+                category: fd.get('category'),
+                available: true
+              });
+            }} className="space-y-3 text-[13px]">
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Dish Title</label>
+                <input required name="name" defaultValue={editItem?.name || ''} placeholder="e.g. Totot Special Kitfo" className="bento-input w-full p-2 rounded" />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Description</label>
+                <textarea required name="desc" defaultValue={editItem?.description || ''} rows="2" placeholder="Ingredients and preparation..." className="bento-input w-full p-2 rounded" />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Price (ETB)</label>
+                  <input required name="price" type="number" defaultValue={editItem?.price || 450} className="bento-input w-full p-2 rounded font-mono font-bold" />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider mb-1">Category</label>
+                  <select name="category" defaultValue={editItem?.category || 'specialties'} className="bento-input w-full p-2 rounded">
+                    <option value="specialties">Specialties</option>
+                    <option value="sides">Sides</option>
+                    <option value="drinks">Drinks & Coffee</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 pt-3 border-t border-[#1A1A1A]/10">
+                <button type="button" onClick={() => { setMenuModalOpen(false); setEditItem(null); }} className="px-4 py-2 border border-[#1A1A1A]/20 rounded text-[11px] font-bold uppercase">Cancel</button>
+                <button type="submit" className="px-5 py-2 bg-[#1A1A1A] text-[#FDFCF5] rounded text-[11px] font-bold uppercase">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: RESERVATION DETAILS */}
+      {resDetails && (
+        <div className="fixed inset-0 bg-[#1A1A1A]/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-[#FDFCF5] border border-[#1A1A1A]/15 rounded-md w-full max-w-sm p-6 space-y-4 shadow-xl">
+            <div className="border-b border-[#1A1A1A]/10 pb-3">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]/50">Reservation Record</div>
+              <h3 className="font-serif italic text-[20px] font-bold">{resDetails.customerName}</h3>
+              <p className="font-mono text-[12px] text-[#1A1A1A]/70">{resDetails.contactPhone}</p>
+            </div>
+            <div className="space-y-2 text-[13px]">
+              <div><strong>Party Size:</strong> {resDetails.partySize} Guests</div>
+              <div><strong>Date & Time:</strong> {resDetails.date} at {resDetails.time}</div>
+              <div><strong>Special Requests:</strong> <em>"{resDetails.specialRequests || 'None'}"</em></div>
+              <div><strong>Status:</strong> <span className="font-bold">{resDetails.status}</span></div>
+            </div>
+            <div className="flex justify-between items-center pt-3 border-t border-[#1A1A1A]/10">
+              <button
+                onClick={() => handleDeleteReservation(resDetails.id)}
+                className="text-[11px] font-bold uppercase text-red-700 hover:underline"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => setResDetails(null)}
+                className="px-4 py-1.5 bg-[#1A1A1A] text-[#FDFCF5] rounded text-[11px] font-bold uppercase"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: FIREBASE MULTI-SITE BRIDGE MODAL */}
+      {firebaseModalOpen && (
+        <div className="fixed inset-0 bg-[#1A1A1A]/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-[#FDFCF5] border border-[#1A1A1A]/15 rounded-md w-full max-w-lg p-6 space-y-4 shadow-xl text-[13px]">
+            <h3 className="font-serif italic text-[20px]">Firebase Multi-Site Connection</h3>
+            <p className="text-[#1A1A1A]/70 leading-relaxed">
+              This console is linked to <strong>{firebaseConfig.projectId}</strong>. Bookings from your consumer website flow directly here in real time.
+            </p>
+            <div className="p-3 bg-[#EFECE5] rounded font-mono text-[11px] space-y-1">
+              <div>Collections Active: <strong>reservations</strong>, <strong>menu_items</strong></div>
+              <div>Live Snapshot Listeners: <strong>Active</strong></div>
+            </div>
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setFirebaseModalOpen(false)}
+                className="px-5 py-2 bg-[#1A1A1A] text-[#FDFCF5] rounded text-[11px] font-bold uppercase"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Mount the App
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
 </body>
 </html>
